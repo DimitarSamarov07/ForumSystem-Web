@@ -1,10 +1,7 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace ForumSystem.Data.Models
+﻿namespace ForumSystem.Data.Models
 {
     using System;
-
-    using ForumSystem.Data.Common.Models;
-
+    using Common.Models;
     using Microsoft.AspNetCore.Identity;
 
     public class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity

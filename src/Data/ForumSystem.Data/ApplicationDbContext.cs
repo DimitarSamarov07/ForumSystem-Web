@@ -24,7 +24,15 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<PostReply> PostReplies { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<PostReplyReport> PostReplyReports { get; set; }
+
+        public DbSet<PostReport> PostReports { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -106,4 +114,5 @@
             }
         }
     }
+
 }
