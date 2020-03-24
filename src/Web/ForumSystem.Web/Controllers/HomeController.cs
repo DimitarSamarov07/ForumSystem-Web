@@ -5,12 +5,13 @@
     using ForumSystem.Web.ViewModels;
 
     using Microsoft.AspNetCore.Mvc;
+    using ViewModels.Home;
 
     public class HomeController : BaseController
     {
         public IActionResult Index()
         {
-            return this.View();
+            return this.View(new IndexViewModel());
         }
 
         public IActionResult Privacy()

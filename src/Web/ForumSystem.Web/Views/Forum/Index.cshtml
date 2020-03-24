@@ -1,0 +1,68 @@
+﻿@model ForumSystem.Web.ViewModels.Categories.CategoryIndexModel
+@using ForumSystem.Data.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of forums</h1>
+@if (User.IsInRole("Admin"))
+{
+    
+    <a class="btn btn-outline-success" asp-action="Create" >Create new Forum</a>
+    <br />
+    <br />
+  
+
+}
+
+<table class="table table-bordered table-hover">
+
+    <tbody>
+        @foreach (var category in Model.CategoryList)
+        {
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-1 text-center"><img src="@category.ImageUrl" style="width: 40px" /></div>
+                        <div class="col-10 ">
+                            <a style="font-size: 1.5em" asp-controller="Category" asp-action="Details" asp-route-id="@category.Id">
+                                @category.Title
+                            </a>
+
+                            @if (category.HasRecentPost)
+                            {
+                                <div class="badge badge-success">New</div>
+                            }
+                            <br />
+
+                            @category.Description
+                            <div class="text-muted">
+                                @category.NumberOfPosts Posts by
+                                @category.NumberOfUsers Users
+                            </div>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <br />
+                                <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+
+                            }
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                </td>
+            </tr>
+
+
+        }
+    </tbody>
+</table>
