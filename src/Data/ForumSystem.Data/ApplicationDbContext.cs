@@ -34,6 +34,8 @@
 
         public DbSet<PostReport> PostReports { get; set; }
 
+        public DbSet<UserCategory> UsersCategories { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -57,6 +59,10 @@
         {
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
+
+            builder
+                .Entity<UserCategory>()
+                .HasKey(x => new {x.UserId, x.CategoryId});
 
             this.ConfigureUserIdentityRelations(builder);
 
