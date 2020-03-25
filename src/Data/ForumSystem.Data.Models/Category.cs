@@ -1,13 +1,19 @@
 ﻿namespace ForumSystem.Data.Models
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-    using Common.Models;
+
+    using ForumSystem.Data.Common.Models;
     using MoreLinq;
 
     public class Category : BaseDeletableModel<int>
     {
+        public Category()
+        {
+            this.Posts = new HashSet<Post>();
+            this.UsersParticipating = new HashSet<UserCategory>();
+        }
+
         public string Title { get; set; }
 
         public string Description { get; set; }

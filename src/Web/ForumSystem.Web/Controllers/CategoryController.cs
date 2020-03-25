@@ -14,13 +14,11 @@
     {
         private readonly ICategoryService categoryService;
         private readonly IPostService postsService;
-        private readonly IMapper mapper;
 
-        public CategoryController(ICategoryService categoryService, IPostService postsService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService, IPostService postsService)
         {
             this.categoryService = categoryService;
             this.postsService = postsService;
-            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -30,21 +28,19 @@
 
         public async Task<IActionResult> Details(int id, string searchQuery)
         {
-            var category = await this.categoryService.GetByIdAsync<Category>(id);
+            var category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
 
             var posts =
                 await this.postsService.GetAllFromCategory<PostListingViewModel>(id);
 
-            var categoryListingModel = this.mapper.Map<Category, CategoryListingViewModel>(category);
-
             foreach (var item in posts)
             {
-                item.Category = categoryListingModel;
+                item.Category = category;
             }
 
             var model = new CategoryDetailsViewModel
             {
-                Category = categoryListingModel,
+                Category = category,
                 Posts = posts,
                 SearchQuery = null,
             };

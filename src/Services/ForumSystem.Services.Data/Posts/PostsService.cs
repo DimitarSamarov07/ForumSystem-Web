@@ -49,7 +49,27 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
+        public async Task<IEnumerable<T>> GetLatestPosts<T>(int n)
+        {
+            return await this.postsRepository
+                .All()
+                .OrderByDescending(x => x.CreatedOn)
+                .To<T>()
+                .Take(n)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetMostPopularPosts<T>(int n)
+        {
+            return await this.postsRepository
+                .All()
+                .OrderByDescending(p => p.Replies.Count)
+                .Take(n)
+                .To<T>()
+                .ToListAsync();
+        }
+
+            public async Task<T> GetByIdAsync<T>(int id)
         {
             var obj = await this.postsRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
 

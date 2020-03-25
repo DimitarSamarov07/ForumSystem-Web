@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Web.ViewModels.Categories
 {
+    using System;
     using AutoMapper;
     using Data.Models;
     using Services.Mapping;
@@ -22,10 +23,17 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
+            DateTime window = DateTime.Now.AddHours(-24);
             configuration.CreateMap<Category, CategoryListingViewModel>()
                 .ForMember(
                     x => x.NumberOfPosts,
-                    x => x.MapFrom(z => z.Posts.Count));
+                    x => x.MapFrom(z => z.Posts.Count))
+                .ForMember(
+                    x => x.HasRecentPost,
+                    x => x.MapFrom(z => z.CreatedOn > window))
+                .ForMember(
+                    x => x.ImageUrl,
+                    x => x.Ignore());
         }
     }
 }

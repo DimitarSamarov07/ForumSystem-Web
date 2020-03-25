@@ -22,6 +22,11 @@
             return await this.categoriesRepository.All().To<T>().ToListAsync();
         }
 
+        public IQueryable<T> GetAllAsQueryable<T>()
+        {
+            return this.categoriesRepository.All().To<T>();
+        }
+
         public async Task CreateCategory(string title, string imageUrl, string description)
         {
             var category = new Category
