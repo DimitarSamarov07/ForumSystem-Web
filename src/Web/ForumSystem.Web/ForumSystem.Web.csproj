@@ -1,16 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-ForumSystem-BBB373B5-EF3F-4DBB-B8AA-7152CEC275BF</UserSecretsId>
-	<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <LangVersion>latest</LangVersion>
+    <UserSecretsId>6acea9c5-9774-4ca9-8455-ab35d673745d</UserSecretsId>
   </PropertyGroup>
-
   <PropertyGroup>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
   </PropertyGroup>
-
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -22,7 +20,6 @@
     <None Include="Views\Shared\_LoginPartial.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Elasticsearch.Net" Version="7.6.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
@@ -40,7 +37,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ForumSystem.Data.Models\ForumSystem.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\ForumSystem.Data\ForumSystem.Data.csproj" />

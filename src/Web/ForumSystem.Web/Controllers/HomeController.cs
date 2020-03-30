@@ -1,19 +1,17 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
-    using Data.Models;
-    using ForumSystem.Web.ViewModels;
 
+    using ForumSystem.Data.Models;
+    using ForumSystem.Services.Data.Categories;
+    using ForumSystem.Services.Data.Posts;
+    using ForumSystem.Web.ViewModels;
+    using ForumSystem.Web.ViewModels.Categories;
+    using ForumSystem.Web.ViewModels.Home;
+    using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data.Categories;
-    using Services.Data.Posts;
-    using Services.Mapping;
-    using ViewModels.Categories;
-    using ViewModels.Home;
-    using ViewModels.Posts;
+    using Nest;
 
     public class HomeController : BaseController
     {
@@ -47,18 +45,6 @@
                 PopularPosts = popularPosts,
                 SearchQuery = string.Empty,
                 Categories = categories,
-
-            };
-        }
-
-        private CategoryListingViewModel GetCategoryListingForPost(Post p)
-        {
-            var category = p.Category;
-            return new CategoryListingViewModel()
-            {
-                Title = category.Title,
-                ImageUrl = category.ImageUrl,
-                Id = category.Id,
             };
         }
 
@@ -70,7 +56,18 @@
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
+        }
+
+        private CategoryListingViewModel GetCategoryListingForPost(Post p)
+        {
+            var category = p.Category;
+            return new CategoryListingViewModel()
+            {
+                Title = category.Title,
+                ImageUrl = category.ImageUrl,
+                Id = category.Id,
+            };
         }
     }
 }

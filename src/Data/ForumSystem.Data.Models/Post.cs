@@ -1,6 +1,5 @@
 ﻿namespace ForumSystem.Data.Models
 {
-    using System;
     using System.Collections.Generic;
     using Common.Models;
 
@@ -30,7 +29,6 @@
         public virtual Category Category { get; set; }
 
         public int CategoryId { get; set; }
-
 
         public virtual ICollection<PostReply> Replies { get; set; }
     }

@@ -18,11 +18,11 @@ namespace ForumSystem.Web.Infrastructure.Extensions
             var settings = new ConnectionSettings(new Uri(url))
                 .DefaultIndex(defaultIndex)
                 .DefaultMappingFor<Post>(m => m
-                    .PropertyName(p => p.Id, "id")
-                )
+                    .PropertyName(p => p.Id, "id"))
                 .DefaultMappingFor<PostReply>(m => m
-                    .PropertyName(c => c.Id, "id")
-                );
+                    .PropertyName(c => c.Id, "id"))
+                .DefaultMappingFor<Category>(x => x
+                    .PropertyName(p => p.Id, "id"));
 
             var client = new ElasticClient(settings);
 

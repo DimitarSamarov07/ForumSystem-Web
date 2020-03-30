@@ -247,9 +247,6 @@ namespace ForumSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -265,11 +262,8 @@ namespace ForumSystem.Data.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReplyId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -277,7 +271,7 @@ namespace ForumSystem.Data.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ReplyId");
 
                     b.ToTable("PostReplies");
                 });
@@ -358,6 +352,51 @@ namespace ForumSystem.Data.Migrations
                     b.HasIndex("ReportedPostId");
 
                     b.ToTable("PostReports");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.Reply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("InnerReplyId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InnerReplyId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.UserCategory", b =>
@@ -505,9 +544,11 @@ namespace ForumSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("ForumSystem.Data.Models.Reply", "Reply")
+                        .WithMany("PostReplies")
+                        .HasForeignKey("ReplyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.PostReplyReport", b =>
@@ -526,6 +567,17 @@ namespace ForumSystem.Data.Migrations
                         .HasForeignKey("ReportedPostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.Reply", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.Reply", "InnerReply")
+                        .WithMany()
+                        .HasForeignKey("InnerReplyId");
+
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.UserCategory", b =>

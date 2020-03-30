@@ -5,13 +5,9 @@
 
     public class PostReply : BaseDeletableModel<int>
     {
+        public int ReplyId { get; set; }
 
-        public string Title { get; set; }
-
-        public string Content { get; set; }
-
-
-        public virtual ApplicationUser User { get; set; }
+        public Reply Reply { get; set; }
 
         public int PostId { get; set; }
 

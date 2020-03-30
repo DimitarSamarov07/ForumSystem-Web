@@ -32,6 +32,8 @@
 
         public DbSet<PostReplyReport> PostReplyReports { get; set; }
 
+        public DbSet<Reply> Replies { get; set; }
+
         public DbSet<PostReport> PostReports { get; set; }
 
         public DbSet<UserCategory> UsersCategories { get; set; }
