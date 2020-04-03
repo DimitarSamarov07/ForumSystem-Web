@@ -12,7 +12,6 @@ namespace ForumSystem.Data.Models
     {
         public string Title { get; set; }
 
-
         [Required]
         [MaxLength(ValidationConstants.DescriptionMaxLength)]
         [MinLength(ValidationConstants.DescriptionMinLength)]

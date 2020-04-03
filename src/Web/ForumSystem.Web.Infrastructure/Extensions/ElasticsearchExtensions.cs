@@ -10,7 +10,8 @@ namespace ForumSystem.Web.Infrastructure.Extensions
     public static class ElasticSearchExtensions
     {
         public static void AddElasticSearch(
-            this IServiceCollection services, IConfiguration configuration)
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
             var url = configuration["elasticsearch:url"];
             var defaultIndex = configuration["elasticsearch:index"];
@@ -19,7 +20,7 @@ namespace ForumSystem.Web.Infrastructure.Extensions
                 .DefaultIndex(defaultIndex)
                 .DefaultMappingFor<Post>(m => m
                     .PropertyName(p => p.Id, "id"))
-                .DefaultMappingFor<PostReply>(m => m
+                .DefaultMappingFor<Reply>(m => m
                     .PropertyName(c => c.Id, "id"))
                 .DefaultMappingFor<Category>(x => x
                     .PropertyName(p => p.Id, "id"));

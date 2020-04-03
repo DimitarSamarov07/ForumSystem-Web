@@ -4,14 +4,16 @@ using ForumSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ForumSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200401185935_FixedUserForeignKey")]
+    partial class FixedUserForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,6 +239,42 @@ namespace ForumSystem.Data.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.PostReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReplyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("ReplyId");
+
+                    b.ToTable("PostReplies");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.PostReplyReport", b =>
                 {
                     b.Property<int>("Id")
@@ -261,7 +299,7 @@ namespace ForumSystem.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ReplyId")
+                    b.Property<int>("PostReplyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -271,7 +309,7 @@ namespace ForumSystem.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("ReplyId");
+                    b.HasIndex("PostReplyId");
 
                     b.ToTable("PostReplyReports");
                 });
@@ -499,11 +537,26 @@ namespace ForumSystem.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ForumSystem.Data.Models.PostReplyReport", b =>
+            modelBuilder.Entity("ForumSystem.Data.Models.PostReply", b =>
                 {
+                    b.HasOne("ForumSystem.Data.Models.Post", "Post")
+                        .WithMany("Replies")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ForumSystem.Data.Models.Reply", "Reply")
                         .WithMany()
                         .HasForeignKey("ReplyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.PostReplyReport", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.PostReply", "PostReply")
+                        .WithMany()
+                        .HasForeignKey("PostReplyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -524,7 +577,7 @@ namespace ForumSystem.Data.Migrations
                         .HasForeignKey("InnerReplyId");
 
                     b.HasOne("ForumSystem.Data.Models.Post", "Post")
-                        .WithMany("Replies")
+                        .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

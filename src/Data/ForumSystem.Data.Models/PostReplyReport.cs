@@ -6,8 +6,8 @@ namespace ForumSystem.Data.Models
 {
     public class PostReplyReport : Report
     {
-        public PostReply PostReply { get; set; }
+        public Reply Reply { get; set; }
 
-        public int PostReplyId { get; set; }
+        public int ReplyId { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace ForumSystem.Web
 {
     using System.Reflection;
-
+    using CloudinaryDotNet;
     using ForumSystem.Data;
     using ForumSystem.Data.Common;
     using ForumSystem.Data.Common.Repositories;
@@ -37,6 +37,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddElasticSearch(this.configuration);
+            services.AddCloudinary(this.configuration);
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
@@ -62,7 +63,8 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
+            services.AddTransient<IEmailSender>(
+                serviceProvider => new SendGridEmailSender(this.configuration["SendGrid:ApiKey"]));
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IPostService, PostsService>();

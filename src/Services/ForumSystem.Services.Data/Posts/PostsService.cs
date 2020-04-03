@@ -8,14 +8,19 @@
     using ForumSystem.Web.Infrastructure.Extensions;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
+    using Nest;
 
     public class PostsService : IPostService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
+        private readonly ElasticClient elasticClient;
 
-        public PostsService(IDeletableEntityRepository<Post> postsRepository)
+        public PostsService(
+                            IDeletableEntityRepository<Post> postsRepository,
+                            ElasticClient elasticClient)
         {
             this.postsRepository = postsRepository;
+            this.elasticClient = elasticClient;
         }
 
         public async Task<IEnumerable<T>> GetAllFromCategory<T>(int categoryId)
@@ -37,6 +42,7 @@
                 Content = content,
             };
 
+            await this.elasticClient.IndexDocumentAsync(post);
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.SaveChangesAsync();
         }
@@ -47,6 +53,13 @@
 
             this.postsRepository.Delete(post);
             await this.postsRepository.SaveChangesAsync();
+        }
+
+        public async Task<Post> GetByIdAsync(int id)
+        {
+            var obj = await this.postsRepository.All().IncludeAll().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            return obj;
         }
 
         public async Task<IEnumerable<T>> GetLatestPosts<T>(int n)
@@ -69,9 +82,9 @@
                 .ToListAsync();
         }
 
-            public async Task<T> GetByIdAsync<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
         {
-            var obj = await this.postsRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
+            var obj = await this.postsRepository.All().IncludeAll().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
 
             return obj;
         }

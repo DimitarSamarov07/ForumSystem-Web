@@ -7,8 +7,24 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    
+    #borderimage {
+        border: 15px solid transparent;
+        padding: 0px;
+        border-image-source: url("https://thumbs.dreamstime.com/b/solid-orange-background-extreme-close-up-different-shades-flames-fire-92085878.jpg");
+        border-image-slice: 30;
+        border-image-repeat: round;
+        margin-left: 222px;
+        margin-right: 222px;
+        object-fit:fill;
+    }
+</style>
 
-<h1>Welcome to @Model.Category.Title forum</h1>
+<h1>Welcome to the @Model.Category.Title category</h1>
+<div class="align-content-stretch"><img id="borderimage" src="@Model.Category.ImageUrl" width="553" height="310"/></div>
+<br/>
+
 
 @if (User.Identity.IsAuthenticated)
 {

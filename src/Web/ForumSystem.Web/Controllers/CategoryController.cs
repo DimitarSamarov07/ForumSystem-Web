@@ -2,23 +2,31 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-
+    using CloudinaryDotNet;
+    using CloudinaryDotNet.Actions;
     using ForumSystem.Services.Data.Categories;
     using ForumSystem.Services.Data.Posts;
     using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Posts;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
         private readonly IPostService postsService;
+        private readonly Cloudinary cloudinary;
 
-        public CategoryController(ICategoryService categoryService, IPostService postsService)
+        public CategoryController(
+                                  ICategoryService categoryService,
+                                  IPostService postsService,
+                                  Cloudinary cloudinary)
         {
             this.categoryService = categoryService;
             this.postsService = postsService;
+            this.cloudinary = cloudinary;
         }
 
         public async Task<IActionResult> Index()
@@ -69,13 +77,20 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
         {
-            var imageUri = "images/category/category.png";
+            var imageUri = await this.Upload(model.ImageUpload);
 
             await this.categoryService.CreateCategory(model.Title, imageUri, model.Description);
 
             return this.RedirectToAction("Index", "Category");
-            // Controller name added just to make the code easier to understand
+
+             // Controller name added just to make the code easier to understand
             // and not to be confused with the Home controller
+        }
+
+        private async Task<string> Upload(IFormFile file)
+        {
+            var uri = await this.cloudinary.UploadAsync(file);
+            return uri;
         }
 
         [Authorize(Roles = "Admin")]

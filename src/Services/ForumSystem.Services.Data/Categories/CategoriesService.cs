@@ -12,14 +12,11 @@
     public class CategoriesService : ICategoryService
     {
         private readonly IDeletableEntityRepository<Category> categoriesRepository;
-        private readonly IElasticClient elasticClient;
 
         public CategoriesService(
-             IDeletableEntityRepository<Category> categoriesRepository,
-             IElasticClient elasticClient)
+             IDeletableEntityRepository<Category> categoriesRepository)
         {
             this.categoriesRepository = categoriesRepository;
-            this.elasticClient = elasticClient;
         }
 
         public async Task<IEnumerable<T>> GetAll<T>()
@@ -41,7 +38,6 @@
                 Description = description,
             };
 
-            var result = this.elasticClient.Index(category, indx=>indx.Index("id"));
             await this.categoriesRepository.AddAsync(category);
             await this.categoriesRepository.SaveChangesAsync();
         }

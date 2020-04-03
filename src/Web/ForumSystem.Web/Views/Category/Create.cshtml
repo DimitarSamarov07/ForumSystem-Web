@@ -1,4 +1,4 @@
-﻿@model  ForumSystem.Web.ViewModels.Categories.AddCategoryModel
+﻿@model ForumSystem.Web.ViewModels.Categories.AddCategoryModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -26,9 +26,12 @@
             <label>Upload Forum Image</label>
             <br />
             <label class="btn btn-dark">
-                Browse <input asp-for="ImageUpload" typeof="file" style="display: none" />
-
+                <input asp-for="ImageUpload" class="btn btn-dark" typeof="file" />
             </label>
+            <br />
+            <p class="text-danger">Make sure to use high-resolution images with aspect ratio 16:9</p>
+            <br />
+
         </div>
         <button type="submit" class="btn btn-primary">Add forum</button>
     </form>

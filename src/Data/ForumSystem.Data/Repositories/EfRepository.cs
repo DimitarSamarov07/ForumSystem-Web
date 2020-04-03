@@ -3,12 +3,10 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using ForumSystem.Data.Common.Repositories;
-
     using Microsoft.EntityFrameworkCore;
+    using Nest;
 
-    public class EfRepository<TEntity> : IRepository<TEntity>
+    public class EfRepository<TEntity> : Common.Repositories.IRepository<TEntity>
         where TEntity : class
     {
         public EfRepository(ApplicationDbContext context)

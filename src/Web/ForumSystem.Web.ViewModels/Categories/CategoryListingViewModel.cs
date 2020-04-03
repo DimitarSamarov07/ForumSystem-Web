@@ -30,10 +30,7 @@
                     x => x.MapFrom(z => z.Posts.Count))
                 .ForMember(
                     x => x.HasRecentPost,
-                    x => x.MapFrom(z => z.CreatedOn > window))
-                .ForMember(
-                    x => x.ImageUrl,
-                    x => x.Ignore());
+                    x => x.MapFrom(z => z.CreatedOn > window));
         }
     }
 }

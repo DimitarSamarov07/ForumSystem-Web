@@ -24,7 +24,6 @@
         {
         }
 
-        public DbSet<PostReply> PostReplies { get; set; }
 
         public DbSet<Category> Categories { get; set; }
 

@@ -18,6 +18,8 @@ namespace ForumSystem.Services.Data.Posts
 
         Task<T> GetByIdAsync<T>(int id);
 
+        Task<Post> GetByIdAsync(int id);
+
         Task<IEnumerable<T>> GetLatestPosts<T>(int n);
 
         Task<IEnumerable<T>> GetMostPopularPosts<T>(int n);

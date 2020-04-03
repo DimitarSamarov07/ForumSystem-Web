@@ -6,24 +6,27 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data.Categories;
     using ForumSystem.Services.Data.Posts;
+    using ForumSystem.Services.Messaging;
     using ForumSystem.Web.ViewModels;
     using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Home;
     using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
-    using Nest;
 
     public class HomeController : BaseController
     {
         private readonly ICategoryService categoryService;
         private readonly IPostService postService;
+        private readonly IEmailSender sender;
 
         public HomeController(
                               ICategoryService categoryService,
-                              IPostService postService)
+                              IPostService postService,
+                              IEmailSender sender)
         {
             this.categoryService = categoryService;
             this.postService = postService;
+            this.sender = sender;
         }
 
         public async Task<IActionResult> Index()
@@ -59,15 +62,5 @@
             return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
         }
 
-        private CategoryListingViewModel GetCategoryListingForPost(Post p)
-        {
-            var category = p.Category;
-            return new CategoryListingViewModel()
-            {
-                Title = category.Title,
-                ImageUrl = category.ImageUrl,
-                Id = category.Id,
-            };
-        }
     }
 }
