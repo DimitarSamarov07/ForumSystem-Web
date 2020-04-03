@@ -8,6 +8,7 @@
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Nest;
+    using Web.Infrastructure.Extensions;
 
     public class CategoriesService : ICategoryService
     {
@@ -21,7 +22,7 @@
 
         public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return await this.categoriesRepository.All().To<T>().ToListAsync();
+            return await this.categoriesRepository.All().IncludeAll().To<T>().ToListAsync();
         }
 
         public IQueryable<T> GetAllAsQueryable<T>()
@@ -44,14 +45,21 @@
 
         public async Task RemoveCategory(int id)
         {
-            var category = await this.GetByIdAsync<Category>(id);
+            var category = await this.GetByIdAsync(id);
             this.categoriesRepository.Delete(category);
             await this.categoriesRepository.SaveChangesAsync();
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
-            var category = await this.categoriesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
+            var obj = await this.categoriesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
+
+            return obj;
+        }
+
+        public async Task<Category> GetByIdAsync(int id)
+        {
+            var category = await this.categoriesRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
 
             return category;
         }

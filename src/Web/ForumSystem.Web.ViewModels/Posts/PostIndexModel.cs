@@ -6,7 +6,7 @@
     using AutoMapper;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-    using ForumSystem.Web.ViewModels.PostReplies;
+    using Reply;
 
     public class PostIndexModel : IMapFrom<Post>, IHaveCustomMappings
     {

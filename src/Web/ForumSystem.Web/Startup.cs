@@ -12,6 +12,7 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Services.Messaging;
     using ForumSystem.Web.ViewModels;
+    using Ganss.XSS;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -68,6 +69,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IPostService, PostsService>();
+            services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

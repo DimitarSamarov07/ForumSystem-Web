@@ -6,15 +6,16 @@ namespace ForumSystem.Services.Data.Posts
 {
     using System.Threading.Tasks;
     using ForumSystem.Data.Models;
+    using ForumSystem.Web.ViewModels.Posts;
 
     public interface IPostService
     {
         Task<IEnumerable<T>> GetAllFromCategory<T>(int categoryId)
             where T : class;
 
-        Task CreatePost(string title, string imageUrl, string content);
+        Task<int> CreatePostAsync(NewPostModel model);
 
-        Task RemovePost(int id);
+        Task RemovePostAsync(int id);
 
         Task<T> GetByIdAsync<T>(int id);
 

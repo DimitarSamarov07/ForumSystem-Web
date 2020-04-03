@@ -9,15 +9,16 @@
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Nest;
+    using Web.ViewModels.Posts;
 
     public class PostsService : IPostService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
-        private readonly ElasticClient elasticClient;
+        private readonly IElasticClient elasticClient;
 
         public PostsService(
                             IDeletableEntityRepository<Post> postsRepository,
-                            ElasticClient elasticClient)
+                            IElasticClient elasticClient)
         {
             this.postsRepository = postsRepository;
             this.elasticClient = elasticClient;
@@ -33,23 +34,27 @@
                 .ToListAsync();
         }
 
-        public async Task CreatePost(string title, string imageUrl, string content)
+        public async Task<int> CreatePostAsync(NewPostModel model)
         {
             var post = new Post
             {
-                Title = title,
-                ImageUrl = imageUrl,
-                Content = content,
+                Title = model.Title,
+                ImageUrl = model.CategoryImageUrl,
+                Content = model.Content,
+                UserId = model.UserId,
+                CategoryId = model.CategoryId,
             };
 
             await this.elasticClient.IndexDocumentAsync(post);
             await this.postsRepository.AddAsync(post);
-            await this.postsRepository.SaveChangesAsync();
+            this.postsRepository.SaveChangesAsync().Wait();
+
+            return post.Id;
         }
 
-        public async Task RemovePost(int id)
+        public async Task RemovePostAsync(int id)
         {
-            var post = await this.GetByIdAsync<Post>(id);
+            var post = await this.GetByIdAsync(id);
 
             this.postsRepository.Delete(post);
             await this.postsRepository.SaveChangesAsync();
@@ -84,7 +89,7 @@
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
-            var obj = await this.postsRepository.All().IncludeAll().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
+            var obj = await this.postsRepository.All().Where(x => x.Id == id).IncludeAll().To<T>().FirstOrDefaultAsync();
 
             return obj;
         }

@@ -27,7 +27,7 @@
         </div>
         <div class="col-10">
 
-            <p class="card-text"> @Model.PostContent</p>
+            <p class="card-text">@Html.Raw(Model.PostContent)</p>
 
         </div>
     </div>
@@ -40,6 +40,7 @@
 
 @if (Model.Replies.Any())
 {
+    <b style="font-size: 30px">Replies:</b>
     foreach (var reply in Model.Replies)
     {
 
@@ -83,8 +84,8 @@
 }
 else
 { <div class="text-center text-primary">
-    <h3>There are no replies to this post</h3>
-</div>
+        <h3>There are no replies to this post</h3>
+    </div>
 }
 
 
@@ -106,12 +107,12 @@ else
 }
 else
 {
-<p class="text-center text-dark">
-    You must be a registered user to add a reply.
-    <a class=" text-primary" asp-controller="Account" asp-action="Login">Login</a> or
-    <a class=" text-primary" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-    now.
-</p>
+    <p class="text-center text-dark">
+        You must be a registered user to add a reply.
+        <a class=" text-primary" asp-controller="Account" asp-action="Login">Login</a> or
+        <a class=" text-primary" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        now.
+    </p>
 }
 
 

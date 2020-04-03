@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.PostReplies
+﻿namespace ForumSystem.Web.ViewModels.Reply
 {
     using System;
     using AutoMapper;

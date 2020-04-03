@@ -2,13 +2,13 @@
 {
     public class NewPostModel
     {
-        public string ForumName { get; set; }
+        public string CategoryName { get; set; }
 
         public string AuthorName { get; set; }
 
-        public string ForumImageUrl { get; set; }
+        public string CategoryImageUrl { get; set; }
 
-        public int ForumId { get; set; }
+        public int CategoryId { get; set; }
 
         public string Title { get; set; }
 

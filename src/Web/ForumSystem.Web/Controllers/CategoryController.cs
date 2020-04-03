@@ -8,6 +8,7 @@
     using ForumSystem.Services.Data.Posts;
     using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Posts;
+    using Ganss.XSS;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -87,12 +88,6 @@
             // and not to be confused with the Home controller
         }
 
-        private async Task<string> Upload(IFormFile file)
-        {
-            var uri = await this.cloudinary.UploadAsync(file);
-            return uri;
-        }
-
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -101,7 +96,6 @@
             return this.View(model);
         }
 
-
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -109,6 +103,12 @@
         {
             await this.categoryService.RemoveCategory(id);
             return this.RedirectToAction("Index");
+        }
+
+        private async Task<string> Upload(IFormFile file)
+        {
+            var uri = await this.cloudinary.UploadAsync(file);
+            return uri;
         }
     }
 }
