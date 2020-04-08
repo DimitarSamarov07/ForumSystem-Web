@@ -11,6 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200404101144_FixedUserCategoryError.cs" />
+    <Compile Remove="Migrations\20200404101144_FixedUserCategoryError.Designer.cs" />
+    <Compile Remove="Migrations\20200404102242_FixedUserIdUsersCategories.cs" />
+    <Compile Remove="Migrations\20200404102242_FixedUserIdUsersCategories.Designer.cs" />
+    <Compile Remove="Migrations\20200404103440_FixedUserIdInUsersCategories.cs" />
+    <Compile Remove="Migrations\20200404103440_FixedUserIdInUsersCategories.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
 

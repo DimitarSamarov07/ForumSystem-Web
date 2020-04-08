@@ -24,6 +24,7 @@
     using Nest;
     using Services.Data.Categories;
     using Services.Data.Posts;
+    using Services.Data.Replies;
 
     public class Startup
     {
@@ -70,6 +71,7 @@
             services.AddTransient<ICategoryService, CategoriesService>();
             services.AddTransient<IPostService, PostsService>();
             services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
+            services.AddTransient<IReplyService, RepliesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,6 +87,13 @@
                 if (env.IsDevelopment())
                 {
                     dbContext.Database.Migrate();
+                    app.UseDeveloperExceptionPage();
+                }
+
+                else
+                {
+                    app.UseExceptionHandler("/Error");
+                    app.UseHsts();
                 }
 
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();

@@ -40,7 +40,7 @@
             var post = await this.postService.GetByIdAsync(id);
             var postModel = await this.postService.GetByIdAsync<PostIndexModel>(id);
             postModel.IsAuthorAdmin = this.IsUserAdmin(post.User);
-            postModel.PostContent = this.sanitizer.Sanitize(postModel.PostContent);
+            postModel.PostContent = new HtmlSanitizer().Sanitize(postModel.PostContent);
 
             return this.View(postModel);
         }

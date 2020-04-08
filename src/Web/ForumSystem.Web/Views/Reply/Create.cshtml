@@ -1,0 +1,86 @@
+﻿@model  ForumSystem.Web.ViewModels.Reply.PostReplyModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<head>
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
+    </script>
+
+</head>
+
+<h1>Add reply to: @Model.PostTitle</h1>
+
+<div>
+    <img href="@Model.CategoryImageUrl" />
+    <a asp-controller="Post" asp-action="Index"
+       asp-route-id="@Model.PostId" class="btn btn-warning">Go back to post</a>
+
+
+
+    <br />
+    <br />
+
+    <div class="card">
+        <div class="card-header">
+            Original post:
+        </div>
+        <div class="card-body row">
+            <div class="col-2 text-center">
+                <img src="@Model.AuthorImageUrl" width="60" />
+
+                <br />
+                <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.AuthorId">@Model.AuthorName</a>
+                @if (Model.IsAuthorAdmin)
+                {
+                    <br />
+                    <p class="badge badge-dark" style="width: 60px;">Admin</p>
+                }
+                <br />
+                Points:
+                (@Model.AuthorRating)
+
+            </div>
+            <div class="col-10">
+
+                <p class="card-text"> @Html.Raw(Model.PostContent)</p>
+
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            Posted on: @Model.Created
+        </div>
+    </div>
+
+
+</div>
+
+<br />
+   
+    <div>
+        <form asp-action="AddReply" method="post">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ReplyContent">Reply as: @Model.AuthorName</label>
+                <textarea asp-for="ReplyContent" id="mytextarea" placeholder="Your reply..."></textarea>
+                <span asp-validation-for="ReplyContent" class="text-danger"></span>
+
+            </div>
+            <button type="submit" class="btn btn-success">Submit reply</button>
+            <button type="reset" class="btn btn-danger">Reset</button>
+        <input asp-for="AuthorId" type="hidden" />
+        <input asp-for="PostId" type="hidden" />
+        <input asp-for="CategoryId" type="hidden" />
+        </form>
+    </div>
+
+
+

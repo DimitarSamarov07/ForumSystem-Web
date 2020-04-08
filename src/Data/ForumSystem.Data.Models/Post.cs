@@ -11,6 +11,7 @@
             this.Upvotes = 0;
             this.Downvotes = 0;
             this.Replies = new HashSet<Reply>();
+            this.Votes = new HashSet<Vote>();
         }
 
         public string Title { get; set; }
@@ -30,9 +31,11 @@
 
         public virtual Category Category { get; set; }
 
+        [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }
 
         public virtual ICollection<Reply> Replies { get; set; }
 
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 }

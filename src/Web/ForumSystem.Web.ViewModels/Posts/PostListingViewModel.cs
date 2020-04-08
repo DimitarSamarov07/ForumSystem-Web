@@ -40,7 +40,6 @@ namespace ForumSystem.Web.ViewModels.Posts
                 .ForMember(
                     x => x.DatePosted,
                     x=>x.MapFrom(z => z.CreatedOn));
-
         }
     }
 }

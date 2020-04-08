@@ -7,6 +7,7 @@
     using ForumSystem.Data.Models;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
+    using MoreLinq;
     using Nest;
     using Web.Infrastructure.Extensions;
 
@@ -22,12 +23,14 @@
 
         public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return await this.categoriesRepository.All().IncludeAll().To<T>().ToListAsync();
-        }
+            var obj = await this.categoriesRepository.All().IncludeAll().ToListAsync();
+            foreach (var category in obj)
+            {
+                 category.NumberOfUsers = await this.GetCountOfUsersInCategory(category.Id);
+            }
 
-        public IQueryable<T> GetAllAsQueryable<T>()
-        {
-            return this.categoriesRepository.All().To<T>();
+            var objToReturn = obj.AsQueryable().To<T>();
+            return objToReturn;
         }
 
         public async Task CreateCategory(string title, string imageUrl, string description)
@@ -57,7 +60,22 @@
             return obj;
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        private async Task<int> GetCountOfUsersInCategory(int id)
+        {
+            var category = await this.categoriesRepository.All()
+                .Include(x => x.Posts)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return category.Posts
+                .Where(x => !x.IsDeleted)
+                .DistinctBy(x => x.UserId)
+                .Count();
+
+            // I had to do this because of an issue with EF. It will throw error if I try to make some kind of
+            // Linq query through Automapper : https://github.com/dotnet/efcore/issues/18179#issuecomment-578862522
+        }
+
+        private async Task<Category> GetByIdAsync(int id)
         {
             var category = await this.categoriesRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
 

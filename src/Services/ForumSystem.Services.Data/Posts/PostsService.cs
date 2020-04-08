@@ -48,7 +48,6 @@
             await this.elasticClient.IndexDocumentAsync(post);
             await this.postsRepository.AddAsync(post);
             this.postsRepository.SaveChangesAsync().Wait();
-
             return post.Id;
         }
 

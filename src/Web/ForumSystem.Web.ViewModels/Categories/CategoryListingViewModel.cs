@@ -1,8 +1,10 @@
 ﻿namespace ForumSystem.Web.ViewModels.Categories
 {
     using System;
+    using System.Linq;
     using AutoMapper;
     using Data.Models;
+    using MoreLinq.Extensions;
     using Services.Mapping;
 
     public class CategoryListingViewModel : IMapFrom<Category>, IHaveCustomMappings
@@ -24,6 +26,7 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             DateTime window = DateTime.Now.AddHours(-24);
+
             configuration.CreateMap<Category, CategoryListingViewModel>()
                 .ForMember(
                     x => x.NumberOfPosts,
