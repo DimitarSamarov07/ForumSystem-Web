@@ -91,10 +91,16 @@
             await this.postService.RemovePostAsync(id);
             return this.RedirectToAction("Details", "Category", new { id = post.CategoryId});
         }
+        public Task<IActionResult> Edit()
+        {
+            return null;
+        }
 
         private bool IsUserAdmin(ApplicationUser user)
         {
             return this.userManager.GetRolesAsync(user).Result.Contains("Admin");
         }
+
+        
     }
 }

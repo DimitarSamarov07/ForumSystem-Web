@@ -16,13 +16,11 @@
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
-        public int Rating { get; set; }
+        public int KarmaPoints { get; set; } = 0;
 
         public string ProfileImageUrl { get; set; }
 
         public DateTime MemberSince { get; set; }
-
-        public bool IsActive { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

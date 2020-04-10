@@ -8,7 +8,13 @@
 
 
 <div class="card">
+    @if (Model.IsUserViewingAuthorOrAdmin)
 
+    {
+        <form method="get" asp-controller="Document" asp-action="Edit" asp-route-id="@Model.Id">
+            <button class="btn btn-custom-blue"><i class="fa fa-edit"> Edit</i></button>
+        </form>
+    }
     <div class="card-body row">
         <div class="col-2 text-center">
             <img src="@Model.AuthorImageUrl" width="60" />
@@ -51,7 +57,7 @@
 
             <div class="card-body row">
                 <div class="col-2 text-center">
-                    <img src="@reply.AuthorImageUrl" width="60px" />
+                    <img src="@reply.AuthorImageUrl" width="60" />
 
                     <br />
                     <a asp-controller="Profile" asp-action="Details" asp-route-id="@reply.AuthorId">@reply.AuthorName</a>
@@ -62,7 +68,7 @@
                     }
                     <br />
                     Points:
-                    (@reply.AuthorRating)
+                    (@reply.KarmaPoints)
 
                 </div>
                 <div class="col-10">

@@ -1,0 +1,33 @@
+﻿@model ForumSystem.Web.ViewModels.Documents.DocumentEditModel
+@{
+    ViewData["Title"] = $"Edit {Model.Title} :";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+<br />
+
+<form asp-controller="Document" asp-action="Edit" method="post">
+
+    <div>
+        <textarea id="mytextarea" asp-for="Content">@Model.Content</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Save changes</button>
+    <button type="reset" class="btn btn-danger" id="btnReset">Reset</button>
+    <input asp-for="DocumentId" type="hidden" />
+    <input asp-for="Title" type="hidden" />
+</form>
+
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+
+    tinymce.init({
+        selector: '#mytextarea',
+        height: "480",
+        plugins: [
+            "image paste table link code media"
+        ]
+    });
+
+</script>

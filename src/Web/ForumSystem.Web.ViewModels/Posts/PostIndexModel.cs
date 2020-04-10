@@ -32,6 +32,8 @@
 
         public bool IsAuthorAdmin { get; set; }
 
+        public bool IsUserViewingAuthorOrAdmin { get; set; }
+
         public int CategoryId { get; set; }
 
         public string CategoryName { get; set; }
@@ -53,7 +55,7 @@
                     x => x.MapFrom(z => z.User.ProfileImageUrl))
                 .ForMember(
                     x => x.AuthorRating,
-                    x => x.MapFrom(z => z.User.Rating))
+                    x => x.MapFrom(z => z.User.KarmaPoints))
                 .ForMember(
                     x => x.Created,
                     x => x.MapFrom(z => z.CreatedOn))

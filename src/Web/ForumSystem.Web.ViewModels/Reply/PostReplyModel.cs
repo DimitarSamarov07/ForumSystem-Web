@@ -15,7 +15,7 @@
 
         public string AuthorImageUrl { get; set; }
 
-        public int AuthorRating { get; set; }
+        public int KarmaPoints { get; set; }
 
         public DateTime Created { get; set; }
 
@@ -49,8 +49,8 @@
                     x => x.AuthorImageUrl,
                     x => x.MapFrom(z => z.User.ProfileImageUrl))
                 .ForMember(
-                    x => x.AuthorRating,
-                    x => x.MapFrom(z => z.User.Rating))
+                    x => x.KarmaPoints,
+                    x => x.MapFrom(z => z.User.KarmaPoints))
                 .ForMember(
                     x => x.Created,
                     x => x.MapFrom(z => z.CreatedOn))

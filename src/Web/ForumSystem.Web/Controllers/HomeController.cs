@@ -2,7 +2,7 @@
 {
     using System.Diagnostics;
     using System.Threading.Tasks;
-
+    using Common;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data.Categories;
     using ForumSystem.Services.Data.Posts;
@@ -54,7 +54,7 @@
 
         public IActionResult Privacy()
         {
-            return this.View();
+            return this.RedirectToAction("Index", "Document", new { title = GlobalConstants.PrivacyPageDocumentTitle });
         }
 
         [AllowAnonymous]

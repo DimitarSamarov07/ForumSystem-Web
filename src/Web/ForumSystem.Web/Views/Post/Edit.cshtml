@@ -1,0 +1,31 @@
+﻿@model ForumSystem.Web.ViewModels.Posts.NewPostModel
+
+@{
+    ViewData["Title"] = $"{Model.Title}";
+}
+
+<h1>Editing post with title ,,@Model.Title"</h1>
+
+<head>
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
+    </script>
+
+</head>
+
+<form asp-controller="Post" asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" id="mytextarea">@Model.Content</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="reset" class="btn btn-danger">Reset</button>
+    <input asp-for="CategoryId" type="hidden" />
+    <p class="text-danger">Note: You can't edit the post's title, only the admin can if it's inappropriate</p>
+</form>

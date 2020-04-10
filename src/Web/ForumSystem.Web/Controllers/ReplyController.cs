@@ -41,7 +41,7 @@
                 AuthorId = user.Id,
                 AuthorName = this.User.Identity.Name,
                 AuthorImageUrl = user.ProfileImageUrl,
-                AuthorRating = user.Rating,
+                KarmaPoints = user.KarmaPoints,
                 IsAuthorAdmin = this.User.IsInRole("Admin"),
 
                 CategoryId = post.Category.Id,

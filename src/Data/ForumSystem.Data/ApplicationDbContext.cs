@@ -24,7 +24,6 @@
         {
         }
 
-
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Post> Posts { get; set; }
@@ -36,6 +35,8 @@
         public DbSet<PostReport> PostReports { get; set; }
 
         public DbSet<Vote> Votes { get; set; }
+
+        public DbSet<Document> Documents { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

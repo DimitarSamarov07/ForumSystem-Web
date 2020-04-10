@@ -23,6 +23,7 @@
     using Microsoft.Extensions.Hosting;
     using Nest;
     using Services.Data.Categories;
+    using Services.Data.Documents;
     using Services.Data.Posts;
     using Services.Data.Replies;
 
@@ -72,6 +73,7 @@
             services.AddTransient<IPostService, PostsService>();
             services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
             services.AddTransient<IReplyService, RepliesService>();
+            services.AddTransient<IDocumentService, DocumentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,17 +86,7 @@
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                if (env.IsDevelopment())
-                {
-                    dbContext.Database.Migrate();
-                    app.UseDeveloperExceptionPage();
-                }
-
-                else
-                {
-                    app.UseExceptionHandler("/Error");
-                    app.UseHsts();
-                }
+                dbContext.Database.Migrate();
 
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
