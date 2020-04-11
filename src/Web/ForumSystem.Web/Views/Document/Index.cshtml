@@ -4,8 +4,12 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<form method="get" asp-controller="Document" asp-action="Edit" asp-route-id="@Model.DocumentId">
-    <button class="btn btn-custom-blue"><i class="fa fa-edit"> Edit</i></button>
-</form>
+@if (this.User.IsInRole("Admin"))
+{
+    <form method="get" asp-controller="Document" asp-action="Edit" asp-route-id="@Model.DocumentId">
+        <button class="btn btn-custom-blue"><i class="fa fa-edit"> Edit</i></button>
+    </form>
+}
+
 <br/>
 <p>@Html.Raw(Model.Content)</p>

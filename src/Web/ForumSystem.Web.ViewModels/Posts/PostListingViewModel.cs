@@ -28,6 +28,8 @@ namespace ForumSystem.Web.ViewModels.Posts
 
         public CategoryListingViewModel Category { get; set; }
 
+        public int CategoryId { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Post, PostListingViewModel>()

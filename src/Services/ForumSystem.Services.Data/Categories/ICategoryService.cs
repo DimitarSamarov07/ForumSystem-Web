@@ -5,6 +5,7 @@ using System.Text;
 namespace ForumSystem.Services.Data.Categories
 {
     using System.Threading.Tasks;
+    using ForumSystem.Data.Models;
 
     public interface ICategoryService
     {
@@ -15,5 +16,7 @@ namespace ForumSystem.Services.Data.Categories
         Task RemoveCategory(int id);
 
         Task<T> GetByIdAsync<T>(int id);
+
+        Task<Category> GetByIdAsync(int id);
     }
 }

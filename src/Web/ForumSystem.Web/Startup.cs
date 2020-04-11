@@ -58,7 +58,6 @@
             services.AddRazorPages();
 
             services.AddSingleton(this.configuration);
-            services.AddSingleton(new ElasticClient());
 
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
@@ -96,11 +95,6 @@
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -110,6 +104,9 @@
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStatusCodePages();
+            app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
             app.UseEndpoints(
                 endpoints =>

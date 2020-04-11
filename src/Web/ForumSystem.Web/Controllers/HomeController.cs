@@ -57,10 +57,5 @@
             return this.RedirectToAction("Index", "Document", new { title = GlobalConstants.PrivacyPageDocumentTitle });
         }
 
-        [AllowAnonymous]
-        public IActionResult Error()
-        {
-            return this.View();
-        }
     }
 }

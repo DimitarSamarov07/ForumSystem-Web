@@ -47,7 +47,7 @@
             var category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
 
             var posts =
-                await this.postsService.GetAllFromCategory<PostListingViewModel>(id);
+                await this.postsService.GetFilteredPosts<PostListingViewModel>(id, searchQuery);
 
             foreach (var item in posts)
             {

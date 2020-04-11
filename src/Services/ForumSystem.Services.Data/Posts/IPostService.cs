@@ -24,5 +24,9 @@ namespace ForumSystem.Services.Data.Posts
         Task<IEnumerable<T>> GetLatestPosts<T>(int n);
 
         Task<IEnumerable<T>> GetMostPopularPosts<T>(int n);
+
+        Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery);
+
+        Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery);
     }
 }

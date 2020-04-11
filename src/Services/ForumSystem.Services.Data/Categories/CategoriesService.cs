@@ -75,7 +75,7 @@
             // Linq query through Automapper : https://github.com/dotnet/efcore/issues/18179#issuecomment-578862522
         }
 
-        private async Task<Category> GetByIdAsync(int id)
+        public async Task<Category> GetByIdAsync(int id)
         {
             var category = await this.categoriesRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
 

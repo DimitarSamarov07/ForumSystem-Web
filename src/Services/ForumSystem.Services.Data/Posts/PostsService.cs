@@ -3,25 +3,25 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Categories;
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Web.Infrastructure.Extensions;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
-    using Nest;
     using Web.ViewModels.Posts;
 
     public class PostsService : IPostService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
-        private readonly IElasticClient elasticClient;
+        private readonly ICategoryService categoryService;
 
         public PostsService(
-                            IDeletableEntityRepository<Post> postsRepository,
-                            IElasticClient elasticClient)
+            IDeletableEntityRepository<Post> postsRepository,
+            ICategoryService categoryService)
         {
             this.postsRepository = postsRepository;
-            this.elasticClient = elasticClient;
+            this.categoryService = categoryService;
         }
 
         public async Task<IEnumerable<T>> GetAllFromCategory<T>(int categoryId)
@@ -45,7 +45,6 @@
                 CategoryId = model.CategoryId,
             };
 
-            await this.elasticClient.IndexDocumentAsync(post);
             await this.postsRepository.AddAsync(post);
             this.postsRepository.SaveChangesAsync().Wait();
             return post.Id;
@@ -74,6 +73,38 @@
                 .To<T>()
                 .Take(n)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery)
+        {
+            var search = searchQuery.ToLower();
+            var posts = this.postsRepository.All();
+            var filteredPosts = await posts.Where(
+                p => p.Title
+                         .ToLower()
+                         .Contains(search)
+                     || p.Content
+                         .ToLower()
+                         .Contains(search))
+                .To<T>()
+                .ToListAsync();
+
+            return filteredPosts;
+        }
+
+        public async Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery)
+        {
+            var search = searchQuery;
+            var category = await this.categoryService.GetByIdAsync(categoryId);
+
+            var filteredPosts = await category.Posts.Where(
+                p => p.Title.ToLower().Contains(search)
+                     || p.Content.Contains(search))
+                .AsQueryable()
+                .To<T>()
+                .ToListAsync();
+
+            return filteredPosts;
         }
 
         public async Task<IEnumerable<T>> GetMostPopularPosts<T>(int n)
