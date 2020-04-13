@@ -1,4 +1,5 @@
-﻿@model ForumSystem.Web.ViewModels.Home.IndexViewModel
+﻿@using ForumSystem.Web.Infrastructure.Extensions
+@model ForumSystem.Web.ViewModels.Home.IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -52,7 +53,7 @@
                                     @category.NumberOfPosts Posts by
                                     @category.NumberOfUsers Users
                                 </div>
-                                @if (User.IsInRole("Admin"))
+                                @if (User.IsAdmin())
                                 {
                                     <br />
                                     <a asp-action="Delete" asp-controller="Category" asp-route-id="@category.Id">Delete</a>
@@ -95,7 +96,21 @@
                         <tr>
                             <td>
                                 <div><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
-                                <div>by <a class="text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a></div>
+                                <div>
+                                    <h6 style="margin-bottom: 0;">by</h6>
+
+                                    @if (post.IsAuthorAdmin)
+                                    {
+                                        <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                    }
+
+                                    else
+                                    {
+                                        <a class="badge badge-success" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                    }
+                                </div>
                                 <div class="text-muted">
                                     @if (post.RepliesCount == 1)
                                     {
@@ -138,7 +153,22 @@
                         <tr>
                             <td>
                                 <div><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
-                                <div>by <a class="text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a></div>
+                                <div>
+                                    <h6 style="margin-bottom: 0;">by</h6>
+
+                                    @if (post.IsAuthorAdmin)
+                                    {
+                                        <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                    }
+
+                                    else
+                                    {
+                                        <a class="badge badge-success" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                    }
+
+                                </div>
                                 <div class="text-muted">
 
                                     @if (post.RepliesCount == 1)

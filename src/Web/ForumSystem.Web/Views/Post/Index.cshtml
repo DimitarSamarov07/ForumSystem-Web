@@ -1,4 +1,5 @@
-﻿@model ForumSystem.Web.ViewModels.Posts.PostIndexModel
+﻿@using ForumSystem.Web.Infrastructure.Extensions
+@model ForumSystem.Web.ViewModels.Posts.PostIndexModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,16 +9,15 @@
 
 
 <div class="card">
-    @if (Model.IsUserViewingAuthorOrAdmin)
-
+    @if (Model.IsCurrentUserAuthorOrAdmin)
     {
-        <form method="get" asp-controller="Document" asp-action="Edit" asp-route-id="@Model.Id">
-            <button class="btn btn-custom-blue"><i class="fa fa-edit"> Edit</i></button>
+        <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@Model.Id">
+            <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
         </form>
     }
     <div class="card-body row">
         <div class="col-2 text-center">
-            <img src="@Model.AuthorImageUrl" width="60" />
+            <img src="@Model.AuthorImageUrl" class="img-circle-post" />
 
             <br />
             <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.AuthorId">@Model.AuthorName</a>
@@ -54,10 +54,15 @@
         <br />
 
         <div class="card">
-
+            @if (this.User.IsAdmin() || this.User.Identity.Name == reply.AuthorName)
+            {
+                <form method="get" asp-controller="Reply" asp-action="Edit" asp-route-id="@reply.Id">
+                    <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
+                </form>
+            }
             <div class="card-body row">
                 <div class="col-2 text-center">
-                    <img src="@reply.AuthorImageUrl" width="60" />
+                    <img src="@reply.AuthorImageUrl" class="img-circle-post" />
 
                     <br />
                     <a asp-controller="Profile" asp-action="Details" asp-route-id="@reply.AuthorId">@reply.AuthorName</a>
@@ -85,22 +90,21 @@
 
 
 
-    }
 
+
+    }
 }
+
 else
-{ <div class="text-center text-primary">
-        <h3>There are no replies to this post</h3>
-    </div>
+{
+  <div class="text-center text-primary">
+      <h3>There are no replies to this post</h3>
+  </div>
 }
 
 
 
 <br />
-
-
-
-
 
 
 

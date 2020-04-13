@@ -31,7 +31,7 @@
                     <td>
                         <div>
                             <div style="font-size: 1.5em"><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
-                            <div>by <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a> <span style="font-size: 0.8em">(@post.AuthorRating)</span></div>
+                            <div>by <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a> <span style="font-size: 0.8em">(@post.AuthorKarmaPoints)</span></div>
                             <div>Posted on: @post.DatePosted</div>
 
 

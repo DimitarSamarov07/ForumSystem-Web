@@ -13,10 +13,10 @@ namespace ForumSystem.Data.Models
 
         public string Content { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public ApplicationUser Author { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+        [ForeignKey(nameof(Author))]
+        public string AuthorId { get; set; }
 
         public Reply InnerReply { get; set; }
 

@@ -14,6 +14,8 @@ namespace ForumSystem.Services.Data.Documents
 
         Task<T> GetDocumentById<T>(int id);
 
-        Task EditDocumentContentByIdAsync(DocumentEditModel model);
+        Task EditDocumentContentAsync(DocumentEditModel model);
+
+        Task<bool> DoesItExits(int id);
     }
 }

@@ -42,7 +42,6 @@
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (this.User.Identity.IsAuthenticated)
@@ -114,7 +113,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();

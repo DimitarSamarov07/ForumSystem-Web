@@ -20,7 +20,9 @@ namespace ForumSystem.Web.ViewModels.Posts
 
         public string AuthorName { get; set; }
 
-        public double AuthorRating { get; set; }
+        public int AuthorKarmaPoints { get; set; }
+
+        public bool IsAuthorAdmin { get; set; }
 
         public int RepliesCount { get; set; }
 
@@ -35,13 +37,19 @@ namespace ForumSystem.Web.ViewModels.Posts
             configuration.CreateMap<Post, PostListingViewModel>()
                 .ForMember(
                     x => x.AuthorId,
-                    z => z.MapFrom(x => x.User.UserName))
+                    z => z.MapFrom(x => x.Author.Id))
+                .ForMember(
+                    x => x.AuthorName,
+                    z => z.MapFrom(x => x.Author.UserName))
+                .ForMember(
+                    x => x.AuthorKarmaPoints,
+                    z => z.MapFrom(x => x.Author.KarmaPoints))
                 .ForMember(
                     x => x.RepliesCount,
                     z => z.MapFrom(x => x.Replies.Count(c => !c.IsDeleted)))
                 .ForMember(
                     x => x.DatePosted,
-                    x=>x.MapFrom(z => z.CreatedOn));
+                    x => x.MapFrom(z => z.CreatedOn));
         }
     }
 }

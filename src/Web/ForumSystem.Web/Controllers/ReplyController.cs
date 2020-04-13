@@ -60,11 +60,25 @@
             {
                 PostId = model.PostId,
                 Content = new HtmlSanitizer().Sanitize(model.ReplyContent),
-                User = user,
+                Author = user,
             };
 
             await this.replyService.CreateReplyAsync(reply);
 
+            return this.RedirectToAction("Index", "Post", new { id = model.PostId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await this.replyService.GetReplyById<EditReplyModel>(id);
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditReplyModel model)
+        {
+            await this.replyService.EditReplyContent(model);
             return this.RedirectToAction("Index", "Post", new { id = model.PostId });
         }
     }

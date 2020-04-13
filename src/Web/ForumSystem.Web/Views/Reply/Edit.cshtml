@@ -1,0 +1,38 @@
+﻿@model ForumSystem.Web.ViewModels.Reply.EditReplyModel
+@{
+    ViewData["Title"] = "Edit Reply";
+}
+
+<h1>Editing reply created from user @Model.AuthorName</h1>
+
+<head>
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
+    </script>
+
+</head>
+
+
+<div>
+    <form asp-action="Edit" asp-controller="Reply" method="post">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <textarea asp-for="Content" id="mytextarea" placeholder="Your reply...">@Model.Content</textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+
+        </div>
+        <button type="submit" class="btn btn-success">Submit reply</button>
+        <button type="reset" class="btn btn-danger">Reset</button>
+        <input asp-for="PostId" type="hidden" />
+        <input asp-for="ReplyId" type="hidden" />
+    </form>
+</div>
+
+

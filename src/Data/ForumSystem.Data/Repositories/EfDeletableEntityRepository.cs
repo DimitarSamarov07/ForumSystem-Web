@@ -15,6 +15,7 @@
         public EfDeletableEntityRepository(ApplicationDbContext context)
             : base(context)
         {
+            var items = context.Posts.ToList();
         }
 
         public override IQueryable<TEntity> All() => base.All().Where(x => !x.IsDeleted);
@@ -24,6 +25,7 @@
         public IQueryable<TEntity> AllWithDeleted() => base.All().IgnoreQueryFilters();
 
         public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking().IgnoreQueryFilters();
+
 
         public Task<TEntity> GetByIdWithDeletedAsync(params object[] id)
         {

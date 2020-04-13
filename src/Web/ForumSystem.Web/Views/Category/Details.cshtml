@@ -1,5 +1,6 @@
 ﻿@model ForumSystem.Web.ViewModels.Categories.CategoryDetailsViewModel
 @using ForumSystem.Data.Models
+@using ForumSystem.Web.Infrastructure.Extensions
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -8,7 +9,7 @@
     ViewData["Title"] = "Details";
 }
 <style>
-    
+
     #borderimage {
         border: 15px solid transparent;
         padding: 0px;
@@ -17,13 +18,13 @@
         border-image-repeat: round;
         margin-left: 222px;
         margin-right: 222px;
-        object-fit:fill;
+        object-fit: fill;
     }
 </style>
 
 <h1>Welcome to the @Model.Category.Title category</h1>
-<div class="align-content-stretch"><img id="borderimage" src="@Model.Category.ImageUrl" width="553" height="310"/></div>
-<br/>
+<div class="align-content-stretch"><img id="borderimage" src="@Model.Category.ImageUrl" width="553" height="310" /></div>
+<br />
 
 
 @if (User.Identity.IsAuthenticated)
@@ -72,7 +73,22 @@ else
                     <td>
                         <div>
                             <div style="font-size: 1.5em"><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
-                            <div>by <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a> <span style="font-size: 0.8em">(@post.AuthorRating)</span></div>
+                            <div>
+                                <h6 style="margin-bottom: 0;">by</h6>
+
+                                @if (post.IsAuthorAdmin)
+                                {
+                                    <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                }
+
+                                else
+                                {
+                                    <a class="badge badge-success" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a>
+
+                                }
+                                <span style="font-size: 0.8em">(@post.AuthorKarmaPoints)</span>
+                            </div>
                             <div>Posted on: @post.DatePosted</div>
 
 
@@ -91,9 +107,10 @@ else
 
 
 
-                            @if (User.IsInRole("Admin"))
+                            @if (User.IsAdmin())
                             {
 
+                                <div><a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit Post</a></div>
                                 <div><a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete post</a></div>
 
                             }

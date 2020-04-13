@@ -1,0 +1,37 @@
+﻿@model ForumSystem.Web.ViewModels.Categories.EditCategoryModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div>
+    Edit @Model.CategoryTitle
+</div>
+<div>
+    <form asp-action="Edit" asp-controller="Category" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="CategoryTitle">Forum Title</label>
+            <input asp-for="CategoryTitle" class="form-control" placeholder="Add forum title" value="@Model.CategoryTitle"/>
+            <span asp-validation-for="CategoryTitle" class="text-danger"></span>
+
+        </div>
+        <div class="form-group">
+            <label asp-for="CategoryDescription">Category Description</label>
+            <input asp-for="CategoryDescription" class="form-control" placeholder="Edit category description" value="@Model.CategoryDescription">
+            <span asp-validation-for="CategoryDescription" class="text-danger"></span>
+        </div>
+        <div id="upload">
+            <label>Upload Forum Image</label>
+            <br />
+            <label class="btn btn-dark">
+                <input asp-for="NewImage" class="btn btn-dark" typeof="file" />
+            </label>
+            <br />
+            <p class="text-danger">Make sure to use high-resolution images with aspect ratio 16:9</p>
+            <br />
+
+        </div>
+        <button type="submit" class="btn btn-primary btn-success">Edit Category</button>
+        <button type="reset" class="btn btn-primary btn-danger ">Reset</button>
+    </form>
+</div>

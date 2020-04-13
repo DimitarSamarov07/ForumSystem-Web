@@ -1,0 +1,62 @@
+﻿@using ForumSystem.Data.Models
+@using Microsoft.AspNetCore.Identity
+@model ForumSystem.Web.ViewModels.Profile.ProfileModel
+
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Profile Details";
+}
+
+<h1>User Profile</h1>
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading noBorder">
+
+        </div>
+        @*@if (User.IsInRole("Admin"))
+            {
+                <form method="post" asp-controller="Profile" asp-action="Deactivate" asp-route-id="@Model.UserId">
+                    <div>
+                        <button class="btn btn-danger" active="@Model.IsActive">Deactivate User</button>
+                    </div>
+                </form>
+            }*@
+    </div>
+    @if (Context.User.Identity.IsAuthenticated)
+    {
+        <div class="row ">
+            <div class="col-md-4 text-center">
+                <img src="@Model.ProfileImageUrl" class="img-circle-profile" />
+            </div>
+
+
+
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.UserName</h5>
+                        <p class="card-text">
+                            @if (@Model.IsAdmin)
+                            {
+                                <span class="badge badge-dark">Admin</span>
+                                <br />
+                            }
+
+                            <span id="userRating">Current Rating: @Model.UserKarmaPoints</span>
+                            <br />
+                            <span id="userEmailLabel">Email: @Model.Email</span> <br />
+                            <span id="userCreatedLabel">Member Since: @Model.MemberSince</span> <br />
+                        </p>
+                        <a asp-controller="Manage" asp-action="Index" asp-route-id="@Model.UserId" class="btn btn-warning">Manage your account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    }
+</div>

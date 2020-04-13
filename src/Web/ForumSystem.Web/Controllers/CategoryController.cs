@@ -1,9 +1,12 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
+    using Common;
+    using Data.Models;
     using ForumSystem.Services.Data.Categories;
     using ForumSystem.Services.Data.Posts;
     using ForumSystem.Web.ViewModels.Categories;
@@ -12,6 +15,7 @@
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoryController : BaseController
@@ -44,10 +48,26 @@
 
         public async Task<IActionResult> Details(int id, string searchQuery)
         {
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
             var category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
 
-            var posts =
-                await this.postsService.GetFilteredPosts<PostListingViewModel>(id, searchQuery);
+            IEnumerable<PostListingViewModel> posts = new List<PostListingViewModel>();
+
+            if (searchQuery != null)
+            {
+                posts =
+                   await this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery);
+            }
+
+            else
+            {
+                posts =
+                    await this.postsService.GetAllFromCategory<PostListingViewModel>(id);
+            }
 
             foreach (var item in posts)
             {
@@ -65,7 +85,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
             var model = new AddCategoryModel();
@@ -74,8 +94,7 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
         {
             var imageUri = await this.Upload(model.ImageUpload);
@@ -84,11 +103,38 @@
 
             return this.RedirectToAction("Index", "Category");
 
-             // Controller name added just to make the code easier to understand
+            // Controller name added just to make the code easier to understand
             // and not to be confused with the Home controller
         }
 
-        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await this.categoryService.GetByIdAsync<EditCategoryModel>(id);
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public async Task<IActionResult> Edit(EditCategoryModel model)
+        {
+            if (!await this.DoesItExist(model.CategoryId))
+            {
+                return this.NotFound();
+            }
+
+            await this.categoryService.EditCategory(model);
+
+            return this.RedirectToAction("Index", "Category", new { id = model.CategoryId });
+        }
+
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
@@ -98,17 +144,30 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.categoryService.RemoveCategory(id);
             return this.RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult Search(int id, string searchQuery)
+        {
+            return this.RedirectToAction("Details", new { id, searchQuery });
+        }
+
         private async Task<string> Upload(IFormFile file)
         {
             var uri = await this.cloudinary.UploadAsync(file);
             return uri;
+        }
+
+        private async Task<bool> DoesItExist(int id)
+        {
+            var result = await this.categoryService.DoesItExist(id);
+
+            return result;
         }
     }
 }

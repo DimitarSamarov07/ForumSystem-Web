@@ -35,7 +35,7 @@ namespace ForumSystem.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(DocumentEditModel model)
         {
-            await this.documentsService.EditDocumentContentByIdAsync(model);
+            await this.documentsService.EditDocumentContentAsync(model);
 
             return this.RedirectToAction("Index", "Document", new { title = model.Title });
         }

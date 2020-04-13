@@ -1,7 +1,10 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+    using Common;
     using Data.Models;
     using Ganss.XSS;
     using Infrastructure.Extensions;
@@ -39,8 +42,13 @@
         {
             var post = await this.postService.GetByIdAsync(id);
             var postModel = await this.postService.GetByIdAsync<PostIndexModel>(id);
-            postModel.IsAuthorAdmin = this.IsUserAdmin(post.User);
-            postModel.PostContent = new HtmlSanitizer().Sanitize(postModel.PostContent);
+
+            postModel.Replies = await this.CheckIfAuthorsAreAdmins(postModel.Replies);
+
+            var user = await this.userManager.GetUserAsync(this.User);
+            postModel.IsCurrentUserAuthorOrAdmin = await this.IsUserAuthorOrAdmin(user, post);
+
+            postModel.IsAuthorAdmin = await this.IsUserAdmin(post.Author);
 
             return this.View(postModel);
         }
@@ -71,7 +79,7 @@
             return this.RedirectToAction("Index", "Post", new { id = postId });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -83,24 +91,55 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var post = await this.postService.GetByIdAsync(id);
 
             await this.postService.RemovePostAsync(id);
-            return this.RedirectToAction("Details", "Category", new { id = post.CategoryId});
-        }
-        public Task<IActionResult> Edit()
-        {
-            return null;
+            return this.RedirectToAction("Details", "Category", new { id = post.CategoryId });
         }
 
-        private bool IsUserAdmin(ApplicationUser user)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
         {
-            return this.userManager.GetRolesAsync(user).Result.Contains("Admin");
+            var model = await this.postService.GetByIdAsync<EditPostModel>(id);
+
+            return this.View(model);
         }
 
-        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(EditPostModel model)
+        {
+            await this.postService.EditPostContent(model);
+
+            return this.RedirectToAction("Index", "Post", new { id = model.PostId });
+        }
+
+        private async Task<bool> IsUserAdmin(ApplicationUser user)
+        {
+            return await this.userManager.IsUserAdmin(user);
+        }
+
+        private async Task<bool> IsUserAuthorOrAdmin(ApplicationUser user, Post post)
+        {
+            var bool1 = await this.userManager.IsUserAdmin(user);
+            var bool2 = post.AuthorId == user.Id;
+
+            return bool1 || bool2;
+        }
+
+        private async Task<IEnumerable<PostReplyModel>> CheckIfAuthorsAreAdmins(IEnumerable<PostReplyModel> postModelReplies)
+        {
+            foreach (var reply in postModelReplies)
+            {
+                var author = await this.userManager.FindByIdAsync(reply.AuthorId);
+                reply.IsAuthorAdmin = await this.IsUserAdmin(author);
+            }
+
+            return postModelReplies;
+        }
     }
 }

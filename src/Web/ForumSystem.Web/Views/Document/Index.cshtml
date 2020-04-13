@@ -7,7 +7,7 @@
 @if (this.User.IsInRole("Admin"))
 {
     <form method="get" asp-controller="Document" asp-action="Edit" asp-route-id="@Model.DocumentId">
-        <button class="btn btn-custom-blue"><i class="fa fa-edit"> Edit</i></button>
+        <button class="btn btn-custom-document-blue"><i class="fa fa-edit"> Edit</i></button>
     </form>
 }
 

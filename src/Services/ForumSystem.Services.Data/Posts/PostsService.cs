@@ -7,6 +7,7 @@
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Web.Infrastructure.Extensions;
+    using Ganss.XSS;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Web.ViewModels.Posts;
@@ -40,8 +41,8 @@
             {
                 Title = model.Title,
                 ImageUrl = model.CategoryImageUrl,
-                Content = model.Content,
-                UserId = model.UserId,
+                Content = new HtmlSanitizer().Sanitize(model.Content),
+                AuthorId = model.UserId,
                 CategoryId = model.CategoryId,
             };
 
@@ -97,14 +98,13 @@
             var search = searchQuery;
             var category = await this.categoryService.GetByIdAsync(categoryId);
 
-            var filteredPosts = await category.Posts.Where(
-                p => p.Title.ToLower().Contains(search)
-                     || p.Content.Contains(search))
-                .AsQueryable()
-                .To<T>()
-                .ToListAsync();
+            var filteredPosts = category.Posts
+                .Where(
+                    p => p.Title.ToLower().Contains(search)
+                         || p.Content.Contains(search));
 
-            return filteredPosts;
+            var result = filteredPosts.AsQueryable().To<T>();
+            return result;
         }
 
         public async Task<IEnumerable<T>> GetMostPopularPosts<T>(int n)
@@ -122,6 +122,20 @@
             var obj = await this.postsRepository.All().Where(x => x.Id == id).IncludeAll().To<T>().FirstOrDefaultAsync();
 
             return obj;
+        }
+
+        public async Task EditPostContent(EditPostModel model)
+        {
+            var post = await this.GetByIdAsync(model.PostId);
+            post.Content = new HtmlSanitizer().Sanitize(model.Content);
+            this.postsRepository.Update(post);
+            await this.postsRepository.SaveChangesAsync();
+        }
+
+        public async Task<bool> DoesItExits(int id)
+        {
+            var obj = await this.postsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            return obj != null;
         }
     }
 }

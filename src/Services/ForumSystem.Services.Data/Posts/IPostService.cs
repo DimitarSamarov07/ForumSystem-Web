@@ -28,5 +28,9 @@ namespace ForumSystem.Services.Data.Posts
         Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery);
 
         Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery);
+
+        Task EditPostContent(EditPostModel model);
+
+        Task<bool> DoesItExits(int id);
     }
 }

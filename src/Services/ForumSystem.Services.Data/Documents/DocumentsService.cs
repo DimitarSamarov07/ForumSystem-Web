@@ -44,7 +44,7 @@ namespace ForumSystem.Services.Data.Documents
             return document;
         }
 
-        public async Task EditDocumentContentByIdAsync(DocumentEditModel model)
+        public async Task EditDocumentContentAsync(DocumentEditModel model)
         {
             var document = await this.documentsRepository
                 .All()
@@ -54,6 +54,12 @@ namespace ForumSystem.Services.Data.Documents
             document.Content = model.Content;
 
             await this.documentsRepository.SaveChangesAsync();
+        }
+
+        public async Task<bool> DoesItExits(int id)
+        {
+            var obj = await this.documentsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            return obj != null;
         }
     }
 }

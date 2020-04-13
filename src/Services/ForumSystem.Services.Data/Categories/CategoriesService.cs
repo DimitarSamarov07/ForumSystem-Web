@@ -5,11 +5,13 @@
     using System.Threading.Tasks;
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
+    using Ganss.XSS;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using MoreLinq;
     using Nest;
     using Web.Infrastructure.Extensions;
+    using Web.ViewModels.Categories;
 
     public class CategoriesService : ICategoryService
     {
@@ -26,7 +28,7 @@
             var obj = await this.categoriesRepository.All().IncludeAll().ToListAsync();
             foreach (var category in obj)
             {
-                 category.NumberOfUsers = await this.GetCountOfUsersInCategory(category.Id);
+                category.NumberOfUsers = await this.GetCountOfUsersInCategory(category.Id);
             }
 
             var objToReturn = obj.AsQueryable().To<T>();
@@ -68,7 +70,7 @@
 
             return category.Posts
                 .Where(x => !x.IsDeleted)
-                .DistinctBy(x => x.UserId)
+                .DistinctBy(x => x.AuthorId)
                 .Count();
 
             // I had to do this because of an issue with EF. It will throw error if I try to make some kind of
@@ -80,6 +82,23 @@
             var category = await this.categoriesRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
 
             return category;
+        }
+
+        public async Task<bool> DoesItExist(int id)
+        {
+            var obj = await this.categoriesRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            return obj != null;
+        }
+
+        public async Task EditCategory(EditCategoryModel model)
+        {
+            var category = await this.GetByIdAsync(model.CategoryId);
+            category.Title = model.CategoryTitle;
+            category.Description = new HtmlSanitizer().Sanitize(model.CategoryDescription);
+            category.ImageUrl = model.ImageUrl;
+
+            this.categoriesRepository.Update(category);
+            await this.categoriesRepository.SaveChangesAsync();
         }
     }
 }

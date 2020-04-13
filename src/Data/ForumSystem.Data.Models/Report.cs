@@ -10,6 +10,10 @@ namespace ForumSystem.Data.Models
 
     public class Report : BaseDeletableModel<int>
     {
+        public ApplicationUser Reporter { get; set; }
+
+        public int ReporterId { get; set; }
+
         public string Title { get; set; }
 
         [Required]

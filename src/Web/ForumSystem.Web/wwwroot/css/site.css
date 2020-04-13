@@ -7,6 +7,12 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -56,7 +62,7 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-.btn-custom-blue {
+.btn-custom-document-blue {
     background-color: DodgerBlue; /* Blue background */
     border: none; /* Remove borders */
     color: white; /* White text */
@@ -69,7 +75,35 @@ body {
 }
 
 /* Darker background on mouse-over */
-.btn-custom-blue:hover {
+.btn-custom-document-blue:hover {
     background-color: RoyalBlue;
+}
+
+.btn-custom-post {
+    background-color: white; /* Blue background */
+    border: none; /* Remove borders */
+    color: black; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    right: 1px;
+    position: absolute;
+}
+
+/* Darker background on mouse-over */
+.btn-custom-post:hover {
+    background-color: orangered;
+}
+
+.img-circle-profile {
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+}
+
+.img-circle-post {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
 }
 

@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20200404102242_FixedUserIdUsersCategories.Designer.cs" />
     <Compile Remove="Migrations\20200404103440_FixedUserIdInUsersCategories.cs" />
     <Compile Remove="Migrations\20200404103440_FixedUserIdInUsersCategories.Designer.cs" />
+    <Compile Remove="Migrations\20200412102017_dunno.cs" />
+    <Compile Remove="Migrations\20200412102017_dunno.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

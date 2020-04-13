@@ -41,16 +41,16 @@
                 .ForMember(
                     x => x.AuthorId,
                     x => x
-                        .MapFrom(z => z.UserId.ToString()))
+                        .MapFrom(z => z.AuthorId.ToString()))
                 .ForMember(
                     x => x.AuthorName,
-                    x => x.MapFrom(z => z.User.UserName))
+                    x => x.MapFrom(z => z.Author.UserName))
                 .ForMember(
                     x => x.AuthorImageUrl,
-                    x => x.MapFrom(z => z.User.ProfileImageUrl))
+                    x => x.MapFrom(z => z.Author.ProfileImageUrl))
                 .ForMember(
                     x => x.KarmaPoints,
-                    x => x.MapFrom(z => z.User.KarmaPoints))
+                    x => x.MapFrom(z => z.Author.KarmaPoints))
                 .ForMember(
                     x => x.Created,
                     x => x.MapFrom(z => z.CreatedOn))

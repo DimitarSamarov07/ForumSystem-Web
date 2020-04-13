@@ -6,6 +6,7 @@ namespace ForumSystem.Services.Data.Categories
 {
     using System.Threading.Tasks;
     using ForumSystem.Data.Models;
+    using Web.ViewModels.Categories;
 
     public interface ICategoryService
     {
@@ -18,5 +19,10 @@ namespace ForumSystem.Services.Data.Categories
         Task<T> GetByIdAsync<T>(int id);
 
         Task<Category> GetByIdAsync(int id);
+
+        Task<bool> DoesItExist(int id);
+
+        Task EditCategory(EditCategoryModel model);
+
     }
 }

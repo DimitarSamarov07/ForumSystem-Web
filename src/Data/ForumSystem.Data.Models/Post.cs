@@ -24,10 +24,10 @@
 
         public int Downvotes { get; set; }
 
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUser Author { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+        [ForeignKey(nameof(Author))]
+        public string AuthorId { get; set; }
 
         public virtual Category Category { get; set; }
 
