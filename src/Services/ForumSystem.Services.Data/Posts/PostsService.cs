@@ -40,7 +40,6 @@
             var post = new Post
             {
                 Title = model.Title,
-                ImageUrl = model.CategoryImageUrl,
                 Content = new HtmlSanitizer().Sanitize(model.Content),
                 AuthorId = model.UserId,
                 CategoryId = model.CategoryId,

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForumSystem.Data.Models
+﻿namespace ForumSystem.Data.Models
 {
     public class PostReport : Report
     {

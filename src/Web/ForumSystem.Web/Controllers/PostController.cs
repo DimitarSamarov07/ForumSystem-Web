@@ -125,6 +125,11 @@
 
         private async Task<bool> IsUserAuthorOrAdmin(ApplicationUser user, Post post)
         {
+            if (user == null || post == null)
+            {
+                return false;
+            }
+
             var bool1 = await this.userManager.IsUserAdmin(user);
             var bool2 = post.AuthorId == user.Id;
 

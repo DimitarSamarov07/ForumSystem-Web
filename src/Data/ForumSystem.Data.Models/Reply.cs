@@ -9,16 +9,12 @@ namespace ForumSystem.Data.Models
 
     public class Reply : BaseDeletableModel<int>
     {
-        public string Title { get; set; }
-
         public string Content { get; set; }
 
         public ApplicationUser Author { get; set; }
 
         [ForeignKey(nameof(Author))]
         public string AuthorId { get; set; }
-
-        public Reply InnerReply { get; set; }
 
         public int PostId { get; set; }
 

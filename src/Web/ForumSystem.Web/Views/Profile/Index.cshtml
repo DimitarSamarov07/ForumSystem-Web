@@ -24,8 +24,8 @@
             @foreach( var user in Model.Profiles)
             {
                 <tr>
-                    <td><img  src="@user.ProfileImageUrl" width="50"/></td>
-                    <td>@user.UserName</td>
+                    <td><img  src="@user.ProfileImageUrl" class="img-circle-list-profiles"/></td>
+                    <td>@user.Username</td>
                     <td>@user.Email</td>
                     <td>@user.MemberSince</td>
                     <td>@user.UserKarmaPoints</td>

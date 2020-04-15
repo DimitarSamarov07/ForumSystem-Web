@@ -5,9 +5,14 @@ using System.Threading.Tasks;
 
 namespace ForumSystem.Web.Controllers
 {
+    using Common;
     using Data.Models;
+    using Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using MoreLinq.Extensions;
+    using ViewModels.Posts;
     using ViewModels.Profile;
 
     public class ProfileController : BaseController
@@ -19,19 +24,39 @@ namespace ForumSystem.Web.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public async Task<IActionResult> Index()
+        {
+            var profiles = await this.userManager.GetUsersAsync<ApplicationUser, ProfileModel>();
+            var model = new ProfileListModel
+            {
+                Profiles = profiles
+                    .Select(
+                        c =>
+                    {
+                        c.IsAdmin = this.userManager.IsUserAdmin(c.UserId).Result;
+                        return c;
+                    })
+
+                    .ToList(),
+            };
+
+            return this.View(model);
+        }
+
         public async Task<IActionResult> Details(string id)
         {
             var user = await this.userManager.FindByIdAsync(id);
-            var userRoles = await this.userManager.GetRolesAsync(user);
+            var isUserAdmin = await this.userManager.IsUserAdmin(user);
             var model = new ProfileModel()
             {
                 UserId = user.Id,
-                UserName = user.UserName,
-                UserKarmaPoints = user.KarmaPoints.ToString(),
+                Username = user.UserName,
+                UserKarmaPoints = user.KarmaPoints,
                 Email = user.Email,
                 ProfileImageUrl = user.ProfileImageUrl,
                 MemberSince = user.MemberSince,
-                IsAdmin = userRoles.Contains("Admin"),
+                IsAdmin = isUserAdmin,
             };
 
             return this.View(model);

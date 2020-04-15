@@ -27,6 +27,7 @@
     using Services.Data.Documents;
     using Services.Data.Posts;
     using Services.Data.Replies;
+    using Services.Data.Votes;
 
     public class Startup
     {
@@ -44,6 +45,12 @@
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+
+            services.AddAntiforgery(
+                options =>
+                {
+                    options.HeaderName = "X-CSRF-TOKEN";
+                });
 
             services.AddCloudinary(this.configuration);
             services.AddDbContext<ApplicationDbContext>(
@@ -78,6 +85,7 @@
             services.AddTransient<IHtmlSanitizer, HtmlSanitizer>();
             services.AddTransient<IReplyService, RepliesService>();
             services.AddTransient<IDocumentService, DocumentsService>();
+            services.AddTransient<IVoteService, VotesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

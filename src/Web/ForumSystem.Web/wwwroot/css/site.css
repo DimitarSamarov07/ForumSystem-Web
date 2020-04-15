@@ -107,3 +107,9 @@ body {
     border-radius: 50%;
 }
 
+.img-circle-list-profiles {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+

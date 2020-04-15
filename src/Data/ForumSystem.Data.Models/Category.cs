@@ -2,10 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
     using ForumSystem.Data.Common.Models;
-    using MoreLinq;
 
     public class Category : BaseDeletableModel<int>
     {

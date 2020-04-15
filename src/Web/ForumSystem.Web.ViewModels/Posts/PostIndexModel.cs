@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Linq;
     using AutoMapper;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
@@ -13,10 +13,6 @@
         public int Id { get; set; }
 
         public string Title { get; set; }
-
-        public int Upvotes { get; set; }
-
-        public int Downvotes { get; set; }
 
         public string AuthorId { get; set; }
 
@@ -39,6 +35,8 @@
         public string CategoryName { get; set; }
 
         public IEnumerable<PostReplyModel> Replies { get; set; }
+
+        public int TotalVotes { get; private set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
@@ -67,7 +65,10 @@
                     x => x.MapFrom(z => z.CategoryId))
                 .ForMember(
                     x => x.CategoryName,
-                    x => x.MapFrom(z => z.Category.Title));
+                    x => x.MapFrom(z => z.Category.Title))
+                .ForMember(
+                    x => x.TotalVotes,
+                    x => x.MapFrom(z => z.Votes.Sum(v => (int)v.VoteType)));
         }
     }
 }

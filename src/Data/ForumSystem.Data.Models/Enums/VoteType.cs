@@ -6,7 +6,7 @@ namespace ForumSystem.Data.Models.Enums
 {
     public enum VoteType
     {
-        Dowvote = -1,
-        Upvote = 1,
+        DownVote = -1,
+        UpVote = 1,
     }
 }
