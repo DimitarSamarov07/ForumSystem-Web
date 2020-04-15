@@ -7,6 +7,7 @@
     using Common;
     using Data.Models;
     using Ganss.XSS;
+    using Infrastructure.Attributes;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -79,7 +80,7 @@
             return this.RedirectToAction("Index", "Post", new { id = postId });
         }
 
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -91,7 +92,7 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var post = await this.postService.GetByIdAsync(id);

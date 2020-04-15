@@ -1,7 +1,6 @@
 ﻿namespace ForumSystem.Web
 {
     using System.Reflection;
-    using CloudinaryDotNet;
     using ForumSystem.Data;
     using ForumSystem.Data.Common;
     using ForumSystem.Data.Common.Repositories;
@@ -22,7 +21,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Nest;
     using Services.Data.Categories;
     using Services.Data.Documents;
     using Services.Data.Posts;

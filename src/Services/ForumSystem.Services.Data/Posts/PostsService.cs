@@ -77,19 +77,25 @@
 
         public async Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery)
         {
-            var search = searchQuery.ToLower();
             var posts = this.postsRepository.All();
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return posts.To<T>();
+            }
+
+            var search = searchQuery.ToLower();
             var filteredPosts = await posts.Where(
-                p => p.Title
-                         .ToLower()
-                         .Contains(search)
-                     || p.Content
-                         .ToLower()
-                         .Contains(search))
+                    p => p.Title
+                             .ToLower()
+                             .Contains(search)
+                         || p.Content
+                             .ToLower()
+                             .Contains(search))
                 .To<T>()
                 .ToListAsync();
 
             return filteredPosts;
+
         }
 
         public async Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery)
@@ -135,6 +141,12 @@
         {
             var obj = await this.postsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
             return obj != null;
+        }
+
+        public async Task<int> GetCountOfPosts()
+        {
+            var count = await this.postsRepository.All().CountAsync();
+            return count;
         }
     }
 }

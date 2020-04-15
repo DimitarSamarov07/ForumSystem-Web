@@ -9,7 +9,13 @@ namespace ForumSystem.Web.Controllers
     public class ErrorController : BaseController
     {
         [Route("404")]
-        public IActionResult Error()
+        public IActionResult Error404()
+        {
+            return this.View();
+        }
+
+        [Route("401")]
+        public IActionResult Error401()
         {
             return this.View();
         }

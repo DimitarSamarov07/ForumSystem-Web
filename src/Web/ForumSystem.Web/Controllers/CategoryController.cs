@@ -12,12 +12,14 @@
     using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Posts;
     using Ganss.XSS;
+    using Infrastructure.Attributes;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    [Auth(GlobalConstants.AdministratorRoleName)]
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
@@ -34,6 +36,7 @@
             this.cloudinary = cloudinary;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var categories = await this.categoryService.GetAll<CategoryListingViewModel>();
@@ -46,6 +49,7 @@
             return this.View(model);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id, string searchQuery)
         {
             if (!await this.DoesItExist(id))
@@ -85,7 +89,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
             var model = new AddCategoryModel();
@@ -94,7 +97,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
         {
             var imageUri = await this.Upload(model.ImageUpload);
@@ -108,7 +110,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await this.categoryService.GetByIdAsync<EditCategoryModel>(id);
@@ -121,7 +122,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Edit(EditCategoryModel model)
         {
             if (!await this.DoesItExist(model.CategoryId))
@@ -134,7 +134,7 @@
             return this.RedirectToAction("Index", "Category", new { id = model.CategoryId });
         }
 
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
@@ -144,7 +144,6 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.categoryService.RemoveCategory(id);
@@ -152,6 +151,7 @@
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Search(int id, string searchQuery)
         {
             return this.RedirectToAction("Details", new { id, searchQuery });

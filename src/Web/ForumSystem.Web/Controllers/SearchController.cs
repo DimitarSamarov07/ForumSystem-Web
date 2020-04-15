@@ -16,6 +16,7 @@ namespace ForumSystem.Web.Controllers
     {
         private readonly IPostService postsService;
         private readonly ICategoryService categoryService;
+        private const int PostsPerPageDefaultValue = 10;
 
         public SearchController(
             IPostService postsService,
@@ -25,9 +26,15 @@ namespace ForumSystem.Web.Controllers
             this.categoryService = categoryService;
         }
 
-        public async Task<IActionResult> Results(string searchQuery)
+        public async Task<IActionResult> Results(string searchQuery, int page = 1, int perPage = PostsPerPageDefaultValue)
         {
             var listingModel = await this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery);
+            var pagesCount = (int)Math.Ceiling(listingModel.Count() / (decimal)perPage);
+
+            listingModel = listingModel
+                .Skip(perPage * (page - 1))
+                .Take(perPage);
+
             var results = !string.IsNullOrEmpty(searchQuery) && !listingModel.Any();
             foreach (var item in listingModel)
             {
@@ -39,6 +46,8 @@ namespace ForumSystem.Web.Controllers
                 Posts = listingModel,
                 SearchQuery = searchQuery,
                 EmptySearchResults = results,
+                CurrentPage = page,
+                PagesCount = pagesCount,
             };
 
             return this.View(model);
