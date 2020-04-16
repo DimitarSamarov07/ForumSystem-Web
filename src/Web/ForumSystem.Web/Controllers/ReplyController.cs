@@ -28,6 +28,11 @@
 
         public async Task<IActionResult> Create(int id)
         {
+            if (!await this.postService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var post = await this.postService.GetByIdAsync(id);
 
             var user = await this.userManager.FindByNameAsync(this.User.Identity.Name);
@@ -55,6 +60,11 @@
         [HttpPost]
         public async Task<IActionResult> AddReply(PostReplyModel model)
         {
+            if (!await this.postService.DoesItExits(model.PostId))
+            {
+                return this.NotFound();
+            }
+
             var user = await this.userManager.FindByNameAsync(this.User.Identity.Name);
             var reply = new Reply
             {
@@ -71,6 +81,11 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!await this.replyService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var model = await this.replyService.GetReplyById<EditReplyModel>(id);
             return this.View(model);
         }
@@ -78,6 +93,11 @@
         [HttpPost]
         public async Task<IActionResult> Edit(EditReplyModel model)
         {
+            if (!await this.postService.DoesItExits(model.PostId))
+            {
+                return this.NotFound();
+            }
+
             await this.replyService.EditReplyContent(model);
             return this.RedirectToAction("Index", "Post", new { id = model.PostId });
         }

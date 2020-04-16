@@ -49,7 +49,10 @@ namespace ForumSystem.Web.ViewModels.Posts
                     z => z.MapFrom(x => x.Replies.Count(c => !c.IsDeleted)))
                 .ForMember(
                     x => x.DatePosted,
-                    x => x.MapFrom(z => z.CreatedOn));
+                    x => x.MapFrom(z => z.CreatedOn))
+                .ForMember(
+                    x => x.CategoryId,
+                    x => x.MapFrom(z => z.CategoryId));
         }
     }
 }

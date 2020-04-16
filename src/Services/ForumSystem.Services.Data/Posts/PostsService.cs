@@ -35,6 +35,14 @@
                 .ToListAsync();
         }
 
+        public IQueryable<T> GetAllFromCategoryАsQueryable<T>(int categoryId)
+            where T : class
+        {
+            return this.postsRepository.All()
+                .Where(x => x.Category.Id == categoryId)
+                .To<T>();
+        }
+
         public async Task<int> CreatePostAsync(NewPostModel model)
         {
             var post = new Post
@@ -75,7 +83,7 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery)
+        public IQueryable<T> GetFilteredPosts<T>(string searchQuery)
         {
             var posts = this.postsRepository.All();
             if (string.IsNullOrWhiteSpace(searchQuery))
@@ -84,21 +92,18 @@
             }
 
             var search = searchQuery.ToLower();
-            var filteredPosts = await posts.Where(
+            var filteredPosts = posts.Where(
                     p => p.Title
                              .ToLower()
                              .Contains(search)
                          || p.Content
                              .ToLower()
                              .Contains(search))
-                .To<T>()
-                .ToListAsync();
-
+                .To<T>();
             return filteredPosts;
-
         }
 
-        public async Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery)
+        public async Task<IQueryable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery)
         {
             var search = searchQuery;
             var category = await this.categoryService.GetByIdAsync(categoryId);

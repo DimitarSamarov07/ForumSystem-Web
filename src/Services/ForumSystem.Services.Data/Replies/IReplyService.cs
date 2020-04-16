@@ -14,5 +14,7 @@
         Task<T> GetReplyById<T>(int id);
 
         Task RemoveReplyAsync(int id);
+
+        Task<bool> DoesItExits(int id);
     }
 }

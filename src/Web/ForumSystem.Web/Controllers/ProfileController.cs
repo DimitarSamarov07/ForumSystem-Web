@@ -7,6 +7,7 @@ namespace ForumSystem.Web.Controllers
 {
     using Common;
     using Data.Models;
+    using Infrastructure.Attributes;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -24,7 +25,7 @@ namespace ForumSystem.Web.Controllers
             this.userManager = userManager;
         }
 
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Index()
         {
             var profiles = await this.userManager.GetUsersAsync<ApplicationUser, ProfileModel>();
@@ -47,6 +48,11 @@ namespace ForumSystem.Web.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var user = await this.userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return this.NotFound();
+            }
+
             var isUserAdmin = await this.userManager.IsUserAdmin(user);
             var model = new ProfileModel()
             {

@@ -61,5 +61,12 @@ namespace ForumSystem.Services.Data.Documents
             var obj = await this.documentsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
             return obj != null;
         }
+
+        public async Task<bool> DoesItExitsByTitle(string title)
+        {
+            var obj = await this.documentsRepository.All().FirstOrDefaultAsync(x => x.Title == title);
+
+            return obj != null;
+        }
     }
 }

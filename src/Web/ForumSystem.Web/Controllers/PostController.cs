@@ -41,6 +41,11 @@
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
+            if (!await this.postService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var post = await this.postService.GetByIdAsync(id);
             var postModel = await this.postService.GetByIdAsync<PostIndexModel>(id);
 
@@ -57,6 +62,11 @@
         [Authorize]
         public async Task<IActionResult> Create(int id)
         {
+            if (!await this.categoryService.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
             var category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
 
             var model = new NewPostModel
@@ -83,6 +93,11 @@
         [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!await this.postService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var user = await this.userManager.GetUserAsync(this.User);
 
             var model = await this.postService.GetByIdAsync<PostListingViewModel>(id);
@@ -95,6 +110,11 @@
         [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!await this.postService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var post = await this.postService.GetByIdAsync(id);
 
             await this.postService.RemovePostAsync(id);
@@ -105,6 +125,11 @@
         [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!await this.postService.DoesItExits(id))
+            {
+                return this.NotFound();
+            }
+
             var model = await this.postService.GetByIdAsync<EditPostModel>(id);
 
             return this.View(model);
@@ -114,6 +139,11 @@
         [Authorize]
         public async Task<IActionResult> Edit(EditPostModel model)
         {
+            if (!await this.postService.DoesItExits(model.PostId))
+            {
+                return this.NotFound();
+            }
+
             await this.postService.EditPostContent(model);
 
             return this.RedirectToAction("Index", "Post", new { id = model.PostId });

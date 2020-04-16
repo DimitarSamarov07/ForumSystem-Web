@@ -1,13 +1,12 @@
 ﻿namespace ForumSystem.Web.Infrastructure.Attributes
 {
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using System.Web.Http.Controllers;
+
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Controllers;
+    using Microsoft.AspNetCore.Mvc.Filters;
 
     public class AuthAttribute : ActionFilterAttribute
     {
@@ -31,6 +30,7 @@
                     base.OnResultExecuting(filterContext);
                 }
             }
+
             base.OnResultExecuting(filterContext);
         }
 

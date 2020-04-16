@@ -38,6 +38,7 @@
                 return this.CurrentPage - 1;
             }
         }
+
         public bool EmptySearchResults { get; set; }
     }
 }

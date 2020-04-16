@@ -1,19 +1,19 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
+
     using CloudinaryDotNet;
-    using CloudinaryDotNet.Actions;
-    using Common;
-    using Data.Models;
+    using ForumSystem.Common;
+    using ForumSystem.Data.Models;
     using ForumSystem.Services.Data.Categories;
     using ForumSystem.Services.Data.Posts;
+    using ForumSystem.Web.Infrastructure.Attributes;
+    using ForumSystem.Web.Infrastructure.Extensions;
+    using ForumSystem.Web.Infrastructure.Helpers;
     using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Posts;
-    using Ganss.XSS;
-    using Infrastructure.Attributes;
-    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -22,67 +22,76 @@
     [Auth(GlobalConstants.AdministratorRoleName)]
     public class CategoryController : BaseController
     {
+        private const int PostsPerPageDefaultValue = 30;
+        private const int CategoriesPerPageDefaultValue = 10;
+
         private readonly ICategoryService categoryService;
         private readonly IPostService postsService;
         private readonly Cloudinary cloudinary;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public CategoryController(
                                   ICategoryService categoryService,
                                   IPostService postsService,
-                                  Cloudinary cloudinary)
+                                  Cloudinary cloudinary,
+                                  UserManager<ApplicationUser> userManager)
         {
             this.categoryService = categoryService;
             this.postsService = postsService;
             this.cloudinary = cloudinary;
+            this.userManager = userManager;
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int perPage = CategoriesPerPageDefaultValue)
         {
-            var categories = await this.categoryService.GetAll<CategoryListingViewModel>();
+            var categories = await this.categoryService.GetAllAsQueryable<CategoryListingViewModel>();
+            var pagesCount = (int)Math.Ceiling(categories.Count() / (decimal)perPage);
 
             var model = new CategoryIndexModel()
             {
-                CategoryList = categories.OrderBy(f => f.Title),
+                PagesCount = pagesCount,
+                CurrentPage = page,
+                CategoryList = PaginationHelper
+                    .CreateForPage(categories.OrderBy(f => f.NumberOfPosts), perPage, page),
             };
 
             return this.View(model);
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int id, string searchQuery)
+        public async Task<IActionResult> Details(int id, string searchQuery, int page = 1, int perPage = PostsPerPageDefaultValue)
         {
             if (!await this.DoesItExist(id))
             {
                 return this.NotFound();
             }
 
+            IQueryable<PostListingViewModel> posts;
+
+            posts = !string.IsNullOrWhiteSpace(searchQuery) ?
+                this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery)
+                : this.postsService.GetAllFromCategoryАsQueryable<PostListingViewModel>(id);
+
+            var pagesCount = (int)Math.Ceiling(posts.Count() / (decimal)perPage);
+
+            posts = PaginationHelper.CreateForPage(posts, perPage, page);
+
             var category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
-
-            IEnumerable<PostListingViewModel> posts = new List<PostListingViewModel>();
-
-            if (searchQuery != null)
-            {
-                posts =
-                   await this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery);
-            }
-
-            else
-            {
-                posts =
-                    await this.postsService.GetAllFromCategory<PostListingViewModel>(id);
-            }
 
             foreach (var item in posts)
             {
                 item.Category = category;
+                item.IsAuthorAdmin = await this.userManager.IsUserAdmin(item.AuthorId);
             }
 
             var model = new CategoryDetailsViewModel
             {
                 Category = category,
                 Posts = posts,
-                SearchQuery = null,
+                PagesCount = pagesCount,
+                CurrentPage = page,
+                SearchQuery = searchQuery,
             };
 
             return this.View(model);
@@ -99,9 +108,9 @@
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
         {
-            var imageUri = await this.Upload(model.ImageUpload);
+            var secureImageUri = await this.Upload(model.ImageUpload);
 
-            await this.categoryService.CreateCategory(model.Title, imageUri, model.Description);
+            await this.categoryService.CreateCategory(model.Title, secureImageUri, model.Description);
 
             return this.RedirectToAction("Index", "Category");
 
@@ -137,6 +146,11 @@
         [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
             var model = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
 
             return this.View(model);
@@ -146,14 +160,24 @@
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
             await this.categoryService.RemoveCategory(id);
             return this.RedirectToAction("Index");
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Search(int id, string searchQuery)
+        public async Task<IActionResult> Search(int id, string searchQuery)
         {
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
             return this.RedirectToAction("Details", new { id, searchQuery });
         }
 

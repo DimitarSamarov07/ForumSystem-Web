@@ -44,7 +44,7 @@
                 };
 
                 var result = await cloudinary.UploadAsync(uploadParams);
-                return result.Uri.AbsoluteUri;
+                return result.SecureUri.AbsoluteUri;
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace ForumSystem.Web.Controllers
 {
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data.Categories;
     using Services.Data.Posts;
@@ -28,18 +29,12 @@ namespace ForumSystem.Web.Controllers
 
         public async Task<IActionResult> Results(string searchQuery, int page = 1, int perPage = PostsPerPageDefaultValue)
         {
-            var listingModel = await this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery);
+            var listingModel = this.postsService.GetFilteredPosts<PostListingViewModel>(searchQuery);
             var pagesCount = (int)Math.Ceiling(listingModel.Count() / (decimal)perPage);
 
-            listingModel = listingModel
-                .Skip(perPage * (page - 1))
-                .Take(perPage);
+            listingModel = PaginationHelper.CreateForPage(listingModel, perPage, page);
 
             var results = !string.IsNullOrEmpty(searchQuery) && !listingModel.Any();
-            foreach (var item in listingModel)
-            {
-                item.Category = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(item.CategoryId);
-            }
 
             var model = new SearchResultModel
             {

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace ForumSystem.Services.Data.Posts
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using ForumSystem.Data.Models;
     using ForumSystem.Web.ViewModels.Posts;
@@ -11,6 +12,9 @@ namespace ForumSystem.Services.Data.Posts
     public interface IPostService
     {
         Task<IEnumerable<T>> GetAllFromCategory<T>(int categoryId)
+            where T : class;
+
+        IQueryable<T> GetAllFromCategoryАsQueryable<T>(int categoryId)
             where T : class;
 
         Task<int> CreatePostAsync(NewPostModel model);
@@ -25,9 +29,9 @@ namespace ForumSystem.Services.Data.Posts
 
         Task<IEnumerable<T>> GetMostPopularPosts<T>(int n);
 
-        Task<IEnumerable<T>> GetFilteredPosts<T>(string searchQuery);
+        IQueryable<T> GetFilteredPosts<T>(string searchQuery);
 
-        Task<IEnumerable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery);
+        Task<IQueryable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery);
 
         Task EditPostContent(EditPostModel model);
 

@@ -17,5 +17,7 @@ namespace ForumSystem.Services.Data.Documents
         Task EditDocumentContentAsync(DocumentEditModel model);
 
         Task<bool> DoesItExits(int id);
+
+        Task<bool> DoesItExitsByTitle(string title);
     }
 }

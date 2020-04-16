@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading.Tasks;
     using Common;
     using ForumSystem.Data.Models;
@@ -19,6 +20,8 @@
 
     public class HomeController : BaseController
     {
+        private const int CategoriesToTake = 10;
+
         private readonly ICategoryService categoryService;
         private readonly IPostService postService;
         private readonly IEmailSender sender;
@@ -53,6 +56,8 @@
             var popularPosts = await this.postService.GetMostPopularPosts<PostListingViewModel>(10);
             var categories = await this.categoryService
                 .GetAll<CategoryListingViewModel>();
+
+            categories = categories.Take(CategoriesToTake);
 
             latestPosts = await this.CheckPostsForAuthorRole(latestPosts);
             popularPosts = await this.CheckPostsForAuthorRole(popularPosts);

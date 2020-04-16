@@ -4,6 +4,7 @@ using System.Text;
 
 namespace ForumSystem.Services.Data.Categories
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using ForumSystem.Data.Models;
     using Web.ViewModels.Categories;
@@ -11,6 +12,8 @@ namespace ForumSystem.Services.Data.Categories
     public interface ICategoryService
     {
         Task<IEnumerable<T>> GetAll<T>();
+
+        Task<IQueryable<T>> GetAllAsQueryable<T>();
 
         Task CreateCategory(string title, string imageUrl, string description);
 

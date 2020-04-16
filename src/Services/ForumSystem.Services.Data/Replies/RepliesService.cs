@@ -66,5 +66,13 @@ namespace ForumSystem.Services.Data.Replies
             this.repliesRepository.Delete(replyToRemove);
             await this.repliesRepository.SaveChangesAsync();
         }
+
+        public async Task<bool> DoesItExits(int id)
+        {
+            var obj = await this.repliesRepository.All()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return obj != null;
+        }
     }
 }

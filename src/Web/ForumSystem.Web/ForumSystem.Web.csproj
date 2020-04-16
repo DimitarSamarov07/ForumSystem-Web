@@ -65,4 +65,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Views\" />
+  </ItemGroup>
 </Project>

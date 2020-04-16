@@ -52,9 +52,8 @@
 
                             @if (User.IsInRole("Admin"))
                             {
-
+                                <div><a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit Post</a></div>
                                 <div><a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete post</a></div>
-
                             }
 
 
@@ -83,7 +82,7 @@ else
     <div class="text-center">
             <ul class="pagination pagination-sm flex-sm-wrap">
                 <li>
-                    <a href="@Url.Action("Search", "Search", new {page = @Model.PreviousPage})">
+                    <a href="@Url.Action("Results", "Search", new {searchQuery = Model.SearchQuery, page = Model.PreviousPage})">
                         <i class="fa fa-backward"></i>
                     </a>
                 </li>
@@ -91,15 +90,15 @@ else
                 {
                     if (i == Model.CurrentPage)
                     {
-                        <li class="active"><a href="@Url.Action("Search", "Search", new {page = i})">@i</a></li>
+                        <li class="active"><a href="@Url.Action("Results", "Search", new {searchQuery = Model.SearchQuery, page = i})">@i</a></li>
                     }
                     else
                     {
-                        <li><a href="@Url.Action("Search", "Search", new {page = i})">@i</a></li>
+                        <li><a href="@Url.Action("Results", "Search", new {searchQuery = Model.SearchQuery, page = i})">@i</a></li>
                     }
                 }
                 <li>
-                    <a href="@Url.Action("Search", "Search", new {page = @Model.PreviousPage})">
+                    <a href="@Url.Action("Results", "Search", new {searchQuery = Model.SearchQuery, page = Model.NextPage})">
                         <i class="fa fa-forward"></i>
                     </a>
                 </li>
