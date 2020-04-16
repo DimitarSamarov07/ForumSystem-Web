@@ -35,6 +35,18 @@
             return objToReturn;
         }
 
+        public async Task<IQueryable<T>> GetAllAsQueryable<T>()
+        {
+            var obj = await this.categoriesRepository.All().IncludeAll().ToListAsync();
+            foreach (var category in obj)
+            {
+                category.NumberOfUsers = await this.GetCountOfUsersInCategory(category.Id);
+            }
+
+            var objToReturn = obj.AsQueryable().To<T>();
+            return objToReturn;
+        }
+
         public async Task CreateCategory(string title, string imageUrl, string description)
         {
             var category = new Category
