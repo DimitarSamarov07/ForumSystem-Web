@@ -1,0 +1,55 @@
+﻿@model ForumSystem.Web.ViewModels.Categories.AddCategoryModel
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Categories
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content container-fluid">
+    <!-- Horizontal Form -->
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Add Doctor</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <form asp-action="AddCategory" class="form-horizontal" method="post" enctype="multipart/form-data">
+            <div class="box-body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Title" class="col-sm-2 control-label">Category Title</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Title" type="text" class="form-control" placeholder="Enter category title">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-sm-2 control-label">Category Description</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Description" type="email" class="form-control" placeholder="Enter category description">
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Upload Forum Image</label>
+                    <br />
+                    <input asp-for="ImageUpload" class="btn btn-dark" typeof="file" />
+                    <br />
+                    <p class="text-danger">Make sure to use high-resolution images with aspect ratio 16:9</p>
+                    <br />
+                </div>
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button type="reset" class="btn btn-default">Reset</button>
+                <button type="submit" class="btn btn-info pull-right">Create</button>
+            </div>
+            <!-- /.box-footer -->
+        </form>
+    </div>
+</section>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -85,6 +85,23 @@
 
         public IQueryable<T> GetFilteredPosts<T>(string searchQuery)
         {
+            // This is the fulltext variant but sadly when using EF there is no big difference, so I prefer the non-commented way
+            // var posts = this.postsRepository.Contains("Title", searchQuery);
+            // if (string.IsNullOrWhiteSpace(searchQuery))
+            // {
+            //     return posts.To<T>();
+            // }
+            // var search = searchQuery.ToLower();
+            // var filteredPosts = posts.Where(
+            //         p => p.Title
+            //                  .ToLower()
+            //                  .Contains(search)
+            //              || p.Content
+            //                  .ToLower()
+            //                  .Contains(search))
+            //     .To<T>();
+            // return filteredPosts;
+
             var posts = this.postsRepository.All();
             if (string.IsNullOrWhiteSpace(searchQuery))
             {

@@ -11,6 +11,8 @@
 
         IQueryable<TEntity> AllAsNoTracking();
 
+        IQueryable<TEntity> Contains(string propertyName, string query);
+
         Task AddAsync(TEntity entity);
 
         void Update(TEntity entity);

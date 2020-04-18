@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ForumSystem.Data.Models\ForumSystem.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Mapping\ForumSystem.Services.Mapping.csproj" />
+    <ProjectReference Include="..\ForumSystem.Web.Infrastructure\ForumSystem.Web.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

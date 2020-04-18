@@ -98,27 +98,6 @@
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            var model = new AddCategoryModel();
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddCategory(AddCategoryModel model)
-        {
-            var secureImageUri = await this.Upload(model.ImageUpload);
-
-            await this.categoryService.CreateCategory(model.Title, secureImageUri, model.Description);
-
-            return this.RedirectToAction("Index", "Category");
-
-            // Controller name added just to make the code easier to understand
-            // and not to be confused with the Home controller
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await this.categoryService.GetByIdAsync<EditCategoryModel>(id);
@@ -129,6 +108,33 @@
 
             return this.View(model);
         }
+        
+        //[HttpGet]
+        //public IActionResult Create()
+        //{
+        //    var model = new AddCategoryModel();
+
+        //    return this.View(model);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> AddCategory(AddCategoryModel model)
+        //{
+        //    var secureImageUri = await this.Upload(model.ImageUpload);
+
+        //    await this.categoryService.CreateCategory(model.Title, secureImageUri, model.Description);
+
+        //    return this.RedirectToAction("Index", "Category");
+
+        //    // Controller name added just to make the code easier to understand
+        //    // and not to be confused with the Home controller
+        //}
+
+        //private async Task<string> Upload(IFormFile file)
+        //{
+        //    var uri = await this.cloudinary.UploadAsync(file);
+        //    return uri;
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Edit(EditCategoryModel model)
@@ -179,12 +185,6 @@
             }
 
             return this.RedirectToAction("Details", new { id, searchQuery });
-        }
-
-        private async Task<string> Upload(IFormFile file)
-        {
-            var uri = await this.cloudinary.UploadAsync(file);
-            return uri;
         }
 
         private async Task<bool> DoesItExist(int id)

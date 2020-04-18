@@ -26,7 +26,6 @@
 
         public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking().IgnoreQueryFilters();
 
-
         public Task<TEntity> GetByIdWithDeletedAsync(params object[] id)
         {
             var getByIdPredicate = EfExpressionHelper.BuildByIdPredicate<TEntity>(this.Context, id);

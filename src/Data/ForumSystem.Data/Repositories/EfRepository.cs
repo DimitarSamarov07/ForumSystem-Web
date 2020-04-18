@@ -23,6 +23,9 @@
 
         public virtual IQueryable<TEntity> AllAsNoTracking() => this.DbSet.AsNoTracking();
 
+        public virtual IQueryable<TEntity> Contains(string propertyName, string query) => this.DbSet
+            .Where(x => EF.Functions.Contains(EF.Property<string>(x, propertyName), query));
+
         public virtual Task AddAsync(TEntity entity) => this.DbSet.AddAsync(entity).AsTask();
 
         public virtual void Update(TEntity entity)
