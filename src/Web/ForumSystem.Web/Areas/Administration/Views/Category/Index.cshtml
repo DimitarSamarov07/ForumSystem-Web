@@ -1,0 +1,98 @@
+﻿@model ForumSystem.Web.ViewModels.Categories.CategoryIndexModel
+<section class="content-header">
+    <h1>
+        Categories
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Categories</li>
+    </ol>
+</section>
+<!-- Main content -->
+<form id="antiForgeryForm" method="post">
+</form>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-header">
+                    <h3 class="box-title">Manage Categories</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Number Of Posts</th>
+                                <th>Number of Categories</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CategoryList)
+                            {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.NumberOfPosts)</td>
+                                <td>@Html.DisplayFor(modelItem => item.NumberOfUsers)</td>
+                                <td>
+                                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                    <a href="" onclick="Delete('@item.Id')">Delete</a>
+                                </td>
+                            </tr>
+                            }
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@section Scripts{
+    <!-- DataTables -->
+    <script src="~/AdminLTE/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/AdminLTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- page script -->
+    <script>
+        $(function() {
+            $('#table').DataTable();
+        });
+
+        function Delete(id) {
+            var token = $("#antiForgeryForm input[name=__RequestVerificationToken]").val();
+            var r = confirm("Are you sure you want to Delete?");
+            var json = { id: id };
+            if (r === true) {
+
+                $.ajax(
+                    {
+                        url: '@Url.Action("Delete", "Category")',
+                        type: "POST",
+                        data: {id: id},
+                        dataType: "json",
+                        headers: { 'X-CSRF-TOKEN': token },
+                        success: function(response) {
+                            var baseUrl = "/Categories";
+                            window.location.reload();
+
+                        },
+                        error: function(xhr, status, error) {
+                            alert("An error has occured! Please try again later or contact the IT team");
+                        }
+                    });
+
+            }
+        }
+    </script>
+}
+

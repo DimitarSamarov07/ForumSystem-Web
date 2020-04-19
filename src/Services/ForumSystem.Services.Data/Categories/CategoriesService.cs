@@ -107,7 +107,10 @@
             var category = await this.GetByIdAsync(model.CategoryId);
             category.Title = model.CategoryTitle;
             category.Description = new HtmlSanitizer().Sanitize(model.CategoryDescription);
-            category.ImageUrl = model.ImageUrl;
+            if (model.ImageUrl != null)
+            {
+                category.ImageUrl = model.ImageUrl;
+            }
 
             this.categoriesRepository.Update(category);
             await this.categoriesRepository.SaveChangesAsync();

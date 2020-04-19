@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ForumSystem.Web.Controllers
 {
@@ -16,6 +13,12 @@ namespace ForumSystem.Web.Controllers
 
         [Route("401")]
         public IActionResult Error401()
+        {
+            return this.View();
+        }
+
+        [Route("500")]
+        public IActionResult Error500()
         {
             return this.View();
         }

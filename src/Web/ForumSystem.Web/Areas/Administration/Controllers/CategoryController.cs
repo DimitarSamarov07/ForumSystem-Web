@@ -11,8 +11,10 @@ namespace ForumSystem.Web.Areas.Administration.Controllers
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore.Query.Internal;
     using Services.Data.Categories;
     using Services.Data.Posts;
+    using ViewModels;
     using ViewModels.Categories;
 
     public class CategoryController : AdministrationController
@@ -32,6 +34,18 @@ namespace ForumSystem.Web.Areas.Administration.Controllers
             this.postsService = postsService;
             this.cloudinary = cloudinary;
             this.userManager = userManager;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var categories = await this.categoryService.GetAllAsQueryable<CategoryListingViewModel>();
+
+            var model = new CategoryIndexModel
+            {
+                CategoryList = categories,
+            };
+
+            return this.View(model);
         }
 
         [HttpGet]
@@ -55,10 +69,54 @@ namespace ForumSystem.Web.Areas.Administration.Controllers
             // and not to be confused with the Home controller
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await this.categoryService.GetByIdAsync<EditCategoryModel>(id);
+            if (!await this.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditCategoryModel model)
+        {
+            if (!await this.DoesItExist(model.CategoryId))
+            {
+                return this.NotFound();
+            }
+
+            if (model.NewImage != null)
+            {
+                model.ImageUrl = await this.Upload(model.NewImage);
+            }
+
+            await this.categoryService.EditCategory(model);
+
+            return this.RedirectToAction("Index", "Category");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<DeleteCategoryModel>> Delete(int id)
+        {
+            await this.categoryService.RemoveCategory(id);
+            return new DeleteCategoryModel { Id = id };
+        }
+
         private async Task<string> Upload(IFormFile file)
         {
             var uri = await this.cloudinary.UploadAsync(file);
             return uri;
+        }
+
+        private async Task<bool> DoesItExist(int id)
+        {
+            var result = await this.categoryService.DoesItExist(id);
+
+            return result;
         }
     }
 }

@@ -19,15 +19,17 @@
 </form>
 
 
-<script src="~/lib/tinymce/tinymce.min.js"></script>
-<script type="text/javascript">
+@section Scripts{
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
 
-    tinymce.init({
-        selector: '#mytextarea',
-        height: "480",
-        plugins: [
-            "image paste table link code media"
-        ]
-    });
+        tinymce.init({
+            selector: '#mytextarea',
+            height: "480",
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
 
-</script>
+    </script>
+}
