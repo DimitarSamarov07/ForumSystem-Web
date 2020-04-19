@@ -2,11 +2,11 @@
 {
     using ForumSystem.Common;
     using ForumSystem.Web.Controllers;
-
+    using Infrastructure.Attributes;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Auth(GlobalConstants.AdministratorRoleName)]
     [Area("Administration")]
     public class AdministrationController : BaseController
     {

@@ -22,6 +22,15 @@ namespace ForumSystem.Services.Data.Documents
             this.documentsRepository = documentsRepository;
         }
 
+        public async Task<IEnumerable<T>> GetAll<T>()
+        {
+            var obj = await this.documentsRepository.All()
+                 .To<T>()
+                 .ToListAsync();
+
+            return obj;
+        }
+
         public async Task<T> GetDocumentByTitleAsync<T>(string title)
         {
             var document = await this.documentsRepository

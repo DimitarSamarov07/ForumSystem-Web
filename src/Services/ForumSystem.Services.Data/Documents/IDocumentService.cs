@@ -10,6 +10,8 @@ namespace ForumSystem.Services.Data.Documents
 
     public interface IDocumentService
     {
+        Task<IEnumerable<T>> GetAll<T>();
+
         Task<T> GetDocumentByTitleAsync<T>(string title);
 
         Task<T> GetDocumentById<T>(int id);

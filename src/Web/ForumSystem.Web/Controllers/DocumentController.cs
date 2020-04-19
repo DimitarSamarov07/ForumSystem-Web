@@ -30,29 +30,5 @@ namespace ForumSystem.Web.Controllers
 
             return this.View(model);
         }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            if (!await this.documentsService.DoesItExits(id))
-            {
-                return this.NotFound();
-            }
-
-            var model = await this.documentsService.GetDocumentById<DocumentEditModel>(id);
-            return this.View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(DocumentEditModel model)
-        {
-            if (!await this.documentsService.DoesItExits(model.DocumentId))
-            {
-                return this.NotFound();
-            }
-
-            await this.documentsService.EditDocumentContentAsync(model);
-
-            return this.RedirectToAction("Index", "Document", new { title = model.Title });
-        }
     }
 }
