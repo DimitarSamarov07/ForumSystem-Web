@@ -74,21 +74,6 @@
             return obj;
         }
 
-        private async Task<int> GetCountOfUsersInCategory(int id)
-        {
-            var category = await this.categoriesRepository.All()
-                .Include(x => x.Posts)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            return category.Posts
-                .Where(x => !x.IsDeleted)
-                .DistinctBy(x => x.AuthorId)
-                .Count();
-
-            // I had to do this because of an issue with EF. It will throw error if I try to make some kind of
-            // Linq query through Automapper : https://github.com/dotnet/efcore/issues/18179#issuecomment-578862522
-        }
-
         public async Task<Category> GetByIdAsync(int id)
         {
             var category = await this.categoriesRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -114,6 +99,21 @@
 
             this.categoriesRepository.Update(category);
             await this.categoriesRepository.SaveChangesAsync();
+        }
+
+        private async Task<int> GetCountOfUsersInCategory(int id)
+        {
+            var category = await this.categoriesRepository.All()
+                .Include(x => x.Posts)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return category.Posts
+                .Where(x => !x.IsDeleted)
+                .DistinctBy(x => x.AuthorId)
+                .Count();
+
+            // I had to do this because of an issue with EF. It will throw error if I try to make some kind of
+            // Linq query through Automapper : https://github.com/dotnet/efcore/issues/18179#issuecomment-578862522
         }
     }
 }
