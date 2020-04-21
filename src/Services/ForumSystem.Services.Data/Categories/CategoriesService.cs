@@ -37,13 +37,8 @@
 
         public async Task<IQueryable<T>> GetAllAsQueryable<T>()
         {
-            var obj = await this.categoriesRepository.All().IncludeAll().ToListAsync();
-            foreach (var category in obj)
-            {
-                category.NumberOfUsers = await this.GetCountOfUsersInCategory(category.Id);
-            }
-
-            var objToReturn = obj.AsQueryable().To<T>();
+            var all = await this.GetAll<T>();
+            var objToReturn = all.AsQueryable();
             return objToReturn;
         }
 
@@ -53,7 +48,7 @@
             {
                 Title = title,
                 ImageUrl = imageUrl,
-                Description = description,
+                Description = new HtmlSanitizer().Sanitize(description),
             };
 
             await this.categoriesRepository.AddAsync(category);
