@@ -84,7 +84,7 @@
         [Authorize]
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
-            model.UserId = this.userManager.GetUserId(this.User);
+            model.AuthorId = this.userManager.GetUserId(this.User);
             int postId = await this.postService.CreatePostAsync(model);
 
             return this.RedirectToAction("Index", "Post", new { id = postId });

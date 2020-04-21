@@ -28,10 +28,7 @@
         public async Task<IEnumerable<T>> GetAllFromCategory<T>(int categoryId)
         where T : class
         {
-            return await this.postsRepository.All()
-                .Where(x => x.Category.Id == categoryId)
-                .To<T>()
-                .IncludeAll()
+            return await this.GetAllFromCategoryАsQueryable<T>(categoryId)
                 .ToListAsync();
         }
 
@@ -49,7 +46,7 @@
             {
                 Title = model.Title,
                 Content = new HtmlSanitizer().Sanitize(model.Content),
-                AuthorId = model.UserId,
+                AuthorId = model.AuthorId,
                 CategoryId = model.CategoryId,
             };
 
@@ -68,7 +65,7 @@
 
         public async Task<Post> GetByIdAsync(int id)
         {
-            var obj = await this.postsRepository.All().IncludeAll().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var obj = await this.postsRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
 
             return obj;
         }
