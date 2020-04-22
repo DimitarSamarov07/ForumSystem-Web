@@ -9,6 +9,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Data.Repositories;
     using Mapping;
+    using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using Web.ViewModels;
@@ -26,8 +27,12 @@
 
         public CategoryTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(connection);
             var dbContext = new ApplicationDbContext(options.Options);
+
+            dbContext.Database.EnsureCreated();
 
             this.categoriesRepository = new EfDeletableEntityRepository<Category>(dbContext);
             this.postsRepository = new EfDeletableEntityRepository<Post>(dbContext);
@@ -142,6 +147,7 @@
             };
 
             await this.usersRepository.AddAsync(user);
+            await this.usersRepository.SaveChangesAsync();
 
             var post = new Post
             {
@@ -162,7 +168,6 @@
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.AddAsync(post1);
 
-            await this.usersRepository.SaveChangesAsync();
             await this.categoriesRepository.SaveChangesAsync();
             await this.postsRepository.SaveChangesAsync();
 
@@ -184,7 +189,6 @@
                 Title = this.testCategory1.Title,
                 Description = this.testCategory1.Description,
                 ImageUrl = this.testCategory1.ImageUrl,
-                NumberOfPosts = 0,
                 HasRecentPost = true,
             };
 

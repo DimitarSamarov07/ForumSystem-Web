@@ -35,9 +35,11 @@
         public IQueryable<T> GetAllFromCategoryАsQueryable<T>(int categoryId)
             where T : class
         {
-            return this.postsRepository.All()
-                .Where(x => x.Category.Id == categoryId)
-                .To<T>();
+            var obj = this.postsRepository.All()
+                 .Where(x => x.Category.Id == categoryId)
+                 .To<T>();
+
+            return obj;
         }
 
         public async Task<int> CreatePostAsync(NewPostModel model)
@@ -66,6 +68,13 @@
         public async Task<Post> GetByIdAsync(int id)
         {
             var obj = await this.postsRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            return obj;
+        }
+
+        public async Task<T> GetByIdAsync<T>(int id)
+        {
+            var obj = await this.postsRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefaultAsync();
 
             return obj;
         }
@@ -102,7 +111,7 @@
             var posts = this.postsRepository.All();
             if (string.IsNullOrWhiteSpace(searchQuery))
             {
-                return posts.To<T>();
+                return null;
             }
 
             var search = searchQuery.ToLower();
@@ -119,13 +128,17 @@
 
         public async Task<IQueryable<T>> GetFilteredPosts<T>(int categoryId, string searchQuery)
         {
-            var search = searchQuery;
             var category = await this.categoryService.GetByIdAsync(categoryId);
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return null;
+            }
 
+            searchQuery = searchQuery.ToLower();
             var filteredPosts = category.Posts
                 .Where(
-                    p => p.Title.ToLower().Contains(search)
-                         || p.Content.Contains(search));
+                    p => p.Title.ToLower().Contains(searchQuery)
+                         || p.Content.ToLower().Contains(searchQuery));
 
             var result = filteredPosts.AsQueryable().To<T>();
             return result;
@@ -141,13 +154,6 @@
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
-        {
-            var obj = await this.postsRepository.All().Where(x => x.Id == id).IncludeAll().To<T>().FirstOrDefaultAsync();
-
-            return obj;
-        }
-
         public async Task EditPostContent(EditPostModel model)
         {
             var post = await this.GetByIdAsync(model.PostId);
@@ -160,12 +166,6 @@
         {
             var obj = await this.postsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
             return obj != null;
-        }
-
-        public async Task<int> GetCountOfPosts()
-        {
-            var count = await this.postsRepository.All().CountAsync();
-            return count;
         }
     }
 }

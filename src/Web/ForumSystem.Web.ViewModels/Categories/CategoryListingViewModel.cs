@@ -33,20 +33,10 @@
                 .ForMember(
                     x => x.NumberOfPosts,
                     x =>
-                        x.MapFrom(z => GetCount(z.Posts)))
+                        x.MapFrom(z => z.Posts.Count))
                 .ForMember(
                     x => x.HasRecentPost,
                     x => x.MapFrom(z => z.CreatedOn > window));
-        }
-
-        // I am using this method, because otherwise InMemory will
-        // fail to get the Post's collection count using the Count property
-        // or the Count() method
-        private static int GetCount(ICollection<Post> posts)
-        {
-            var counter = 0;
-            posts.ForEach(o => counter++);
-            return counter;
         }
     }
 }
