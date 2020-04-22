@@ -27,32 +27,10 @@
 
         public CategoryTests()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(connection);
-            var dbContext = new ApplicationDbContext(options.Options);
-
-            dbContext.Database.EnsureCreated();
-
-            this.categoriesRepository = new EfDeletableEntityRepository<Category>(dbContext);
-            this.postsRepository = new EfDeletableEntityRepository<Post>(dbContext);
-            this.usersRepository = new EfDeletableEntityRepository<ApplicationUser>(dbContext);
-
-            this.service = new CategoriesService(this.categoriesRepository);
-            this.testCategory1 = new Category
-            {
-                Title = "Test 1234",
-                Description = "Test 1234",
-                ImageUrl = "www.google.com/pesho.jpg",
-            };
-
-            this.testCategory2 = new Category
-            {
-                Title = "Hi test category 12345",
-                Description = "Bye test category 12345",
-                ImageUrl = "www.google.com/pesho1.jpg",
-            };
             this.InitializeMapper();
+            this.InitializeDatabaseAndRepositories();
+            this.InitializeFields();
+            this.service = new CategoriesService(this.categoriesRepository);
         }
 
         [Fact]
@@ -98,9 +76,8 @@
         [Fact]
         public async Task DeleteMethodWorks()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.AddAsync(this.testCategory2);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
+
             await this.service.RemoveCategory(this.testCategory1.Id);
 
             var count = this.categoriesRepository.All().Count();
@@ -111,9 +88,7 @@
         [Fact]
         public async Task GetByIdWorks()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.AddAsync(this.testCategory2);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var resultObj = await this.service.GetByIdAsync(this.testCategory1.Id);
 
@@ -123,9 +98,7 @@
         [Fact]
         public async Task GetAllMethodReturnsAll()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.AddAsync(this.testCategory2);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var result = await this.service.GetAll<CategoryListingViewModel>();
 
@@ -135,8 +108,7 @@
         [Fact]
         public async Task GetAllMethodSetsTheNumberOfUsersCorrectly()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.AddAsync(this.testCategory2);
+            await this.SeedDatabase();
 
             var user = new ApplicationUser
             {
@@ -168,7 +140,6 @@
             await this.postsRepository.AddAsync(post);
             await this.postsRepository.AddAsync(post1);
 
-            await this.categoriesRepository.SaveChangesAsync();
             await this.postsRepository.SaveChangesAsync();
 
             var result = await this.service.GetAll<CategoryListingViewModel>();
@@ -180,8 +151,7 @@
         [Fact]
         public async Task GetByIdGenericWorks()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var expected = new CategoryListingViewModel
             {
@@ -205,8 +175,7 @@
         [Fact]
         public async Task DoesItExistReturnsTrueIfItExists()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var obj = await this.service.DoesItExist(this.testCategory1.Id);
 
@@ -216,9 +185,6 @@
         [Fact]
         public async Task DoesItExistReturnsFalseIfItDoesNotExists()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.SaveChangesAsync();
-
             var obj = await this.service.DoesItExist(this.testCategory2.Id);
 
             Assert.False(obj);
@@ -227,8 +193,7 @@
         [Fact]
         public async Task EditCategoryChangesAllTheNeededProperties()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var model = new EditCategoryModel
             {
@@ -248,8 +213,7 @@
         [Fact]
         public async Task EditCategoryIgnoresNullImageUrlAndKeepsTheOldOne()
         {
-            await this.categoriesRepository.AddAsync(this.testCategory1);
-            await this.categoriesRepository.SaveChangesAsync();
+            await this.SeedDatabase();
 
             var model = new EditCategoryModel
             {
@@ -262,6 +226,44 @@
             await this.service.EditCategory(model);
 
             Assert.NotNull(this.testCategory1.ImageUrl);
+        }
+
+        private void InitializeDatabaseAndRepositories()
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(connection);
+            var dbContext = new ApplicationDbContext(options.Options);
+
+            dbContext.Database.EnsureCreated();
+
+            this.categoriesRepository = new EfDeletableEntityRepository<Category>(dbContext);
+            this.postsRepository = new EfDeletableEntityRepository<Post>(dbContext);
+            this.usersRepository = new EfDeletableEntityRepository<ApplicationUser>(dbContext);
+        }
+
+        private void InitializeFields()
+        {
+            this.testCategory1 = new Category
+            {
+                Title = "Test 1234",
+                Description = "Test 1234",
+                ImageUrl = "www.google.com/pesho.jpg",
+            };
+
+            this.testCategory2 = new Category
+            {
+                Title = "Hi test category 12345",
+                Description = "Bye test category 12345",
+                ImageUrl = "www.google.com/pesho1.jpg",
+            };
+        }
+
+        private async Task SeedDatabase()
+        {
+            await this.categoriesRepository.AddAsync(this.testCategory1);
+            await this.categoriesRepository.AddAsync(this.testCategory2);
+            await this.categoriesRepository.SaveChangesAsync();
         }
 
         private void InitializeMapper() => AutoMapperConfig.
