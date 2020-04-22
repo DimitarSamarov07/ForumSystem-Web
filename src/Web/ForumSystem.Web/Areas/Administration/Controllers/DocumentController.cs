@@ -29,7 +29,7 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            if (!await this.documentsService.DoesItExits(id))
+            if (!await this.documentsService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -41,7 +41,7 @@
         [HttpPost]
         public async Task<IActionResult> Edit(DocumentEditModel model)
         {
-            if (!await this.documentsService.DoesItExits(model.DocumentId))
+            if (!await this.documentsService.DoesItExist(model.DocumentId))
             {
                 return this.NotFound();
             }

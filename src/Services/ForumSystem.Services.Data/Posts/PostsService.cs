@@ -3,14 +3,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Categories;
+
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
+    using ForumSystem.Services.Data.Categories;
+    using ForumSystem.Services.Mapping;
     using ForumSystem.Web.Infrastructure.Extensions;
+    using ForumSystem.Web.ViewModels.Posts;
     using Ganss.XSS;
-    using Mapping;
     using Microsoft.EntityFrameworkCore;
-    using Web.ViewModels.Posts;
 
     public class PostsService : IPostService
     {

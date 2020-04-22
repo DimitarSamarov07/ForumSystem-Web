@@ -21,7 +21,7 @@ namespace ForumSystem.Web.Controllers
 
         public async Task<IActionResult> Index(string title)
         {
-            if (!await this.documentsService.DoesItExitsByTitle(title))
+            if (!await this.documentsService.DoesItExistByTitle(title))
             {
                 return this.NotFound();
             }

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForumSystem.Services.Data.Documents
+﻿namespace ForumSystem.Services.Data.Documents
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
-    using Mapping;
+    using ForumSystem.Services.Mapping;
+    using ForumSystem.Web.ViewModels.Documents;
+    using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
-    using Web.ViewModels.Documents;
-    using Web.ViewModels.Home;
 
     public class DocumentsService : IDocumentService
     {
@@ -60,18 +58,19 @@ namespace ForumSystem.Services.Data.Documents
                 .Where(x => x.Id == model.DocumentId)
                 .FirstOrDefaultAsync();
 
-            document.Content = model.Content;
+            document.Content = new HtmlSanitizer().Sanitize(model.Content);
 
             await this.documentsRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> DoesItExits(int id)
+        public async Task<bool> DoesItExist(int id)
         {
-            var obj = await this.documentsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            var obj = await this.documentsRepository.All()
+                .FirstOrDefaultAsync(x => x.Id == id);
             return obj != null;
         }
 
-        public async Task<bool> DoesItExitsByTitle(string title)
+        public async Task<bool> DoesItExistByTitle(string title)
         {
             var obj = await this.documentsRepository.All().FirstOrDefaultAsync(x => x.Title == title);
 

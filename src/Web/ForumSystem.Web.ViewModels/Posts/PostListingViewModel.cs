@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForumSystem.Web.ViewModels.Posts
+﻿namespace ForumSystem.Web.ViewModels.Posts
 {
     using System.Linq;
+
     using AutoMapper;
-    using Categories;
-    using Data.Models;
-    using Services.Mapping;
+    using ForumSystem.Data.Models;
+    using ForumSystem.Services.Mapping;
+    using ForumSystem.Web.ViewModels.Categories;
 
     public class PostListingViewModel : IMapFrom<Post>, IHaveCustomMappings
     {
