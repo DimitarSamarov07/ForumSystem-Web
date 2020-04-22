@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForumSystem.Services.Data.Votes
+﻿namespace ForumSystem.Services.Data.Votes
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Data.Models.Enums;
-    using Web.ViewModels.Votes;
 
     public class VotesService : IVoteService
     {
