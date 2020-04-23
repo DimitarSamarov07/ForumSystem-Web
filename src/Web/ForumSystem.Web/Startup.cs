@@ -12,11 +12,13 @@
     using ForumSystem.Services.Messaging;
     using ForumSystem.Web.ViewModels;
     using Ganss.XSS;
+    using Hubs;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.WebSockets;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +47,7 @@
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            services.AddSignalR();
             services.AddAntiforgery(
                 options =>
                 {
@@ -117,6 +120,8 @@
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseWebSockets();
+
             app.UseStatusCodePages();
             app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
@@ -126,6 +131,7 @@
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
+                        endpoints.MapHub<Chat>("/ChatGlobal");
                     });
         }
     }

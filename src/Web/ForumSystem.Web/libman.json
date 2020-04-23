@@ -36,7 +36,6 @@
         "dist/jquery.validate.unobtrusive.min.js"
       ]
     },
-
     {
       "library": "tinymce@5.1.5",
       "destination": "wwwroot/lib/tinymce/",
@@ -52,6 +51,15 @@
         "plugins/link/plugin.min.js",
         "plugins/code/plugin.min.js",
         "plugins/media/plugin.min.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@latest",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
       ]
     }
   ]

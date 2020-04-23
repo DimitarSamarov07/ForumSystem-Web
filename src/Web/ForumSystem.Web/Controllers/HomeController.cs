@@ -45,6 +45,12 @@
             return this.View(model);
         }
 
+        [Authorize]
+        public IActionResult Chat()
+        {
+            return this.View();
+        }
+
         public IActionResult Privacy()
         {
             return this.RedirectToAction("Index", "Document", new { title = GlobalConstants.PrivacyPageDocumentTitle });

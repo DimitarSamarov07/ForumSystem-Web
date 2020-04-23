@@ -1,0 +1,105 @@
+﻿<style>
+    div.panel-body {
+        overflow: scroll;
+        background: url('http://subtlepatterns.com/patterns/geometry2.png');
+    }
+</style>
+<h2>Global Chat</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Global Anonymous Chat - We care for your privacy
+        <i class="fa fa-paper-plane fa-fw"></i>
+    </div>
+    <div class="panel-body" id="chat" style="height:250px;">
+
+        <p id="discussion"></p>
+    </div>
+    <div class="panel-footer" id="panelBody">
+        <div class="input-group">
+            <input id="message" type="text" name="message" class="form-control input-sm" placeholder="Type your message here..." />
+
+            <span class="input-group-btn">
+                <input type="button" class="btn btn-warning btn-sm" id="sendMessage" value="Send">
+            </span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const messages = document.getElementById('chat');
+        const panelBody = document.getElementById('panelBody');
+
+        var connection =
+            new signalR.HubConnectionBuilder()
+                .withUrl("/ChatGlobal")
+                .build();
+        connection.on("NewMessage",
+            function (message) {
+
+                $('#discussion')
+                    .append(`<p style="color:green; text-align:left; width:500px"><strong><img = src="https://www.phplivesupport.com/pics/icons/avatars/public/avatar_7.png"> </strong> ${
+                        htmlEncode(message.text)}</p>`);
+
+
+            });
+
+        $("#sendMessage").click(function () {
+            var message = $("#message").val();
+            connection.invoke("Send", message);
+            $('#message').val('').focus();
+            scrollToTheBottom();
+        });
+
+        $('#message').keypress(function (e) {
+            var key = e.which;
+            if (key == 13) // the enter key code
+            {
+                var message = $("#message").val();
+                if (!isNullOrWhitespace(message)) {
+                    connection.invoke("Send", message);
+                    scrollToTheBottom();
+                }
+                $('#message').val('').focus();
+
+
+            }
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+
+        function scrollToTheBottom() {
+
+            messages.scrollTop = messages.scrollHeight;
+            panelBody.scrollTop = messages.scrollHeight;
+        }
+
+        function htmlEncode(value) {
+            var newValue = escapeHtml(value);
+            var encodedValue = $('<div />').text(newValue).html();
+            return encodedValue;
+        }
+
+        function isNullOrWhitespace(input) {
+
+            if (typeof input === 'undefined' || input == null) return true;
+
+            return input.replace(/\s/g, '').length < 1;
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+    </script>
+}
+
