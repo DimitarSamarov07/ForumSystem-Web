@@ -81,7 +81,7 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!await this.replyService.DoesItExits(id))
+            if (!await this.replyService.DoesItExist(id))
             {
                 return this.NotFound();
             }

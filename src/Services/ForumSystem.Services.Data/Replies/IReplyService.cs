@@ -15,6 +15,6 @@
 
         Task RemoveReplyAsync(int id);
 
-        Task<bool> DoesItExits(int id);
+        Task<bool> DoesItExist(int id);
     }
 }

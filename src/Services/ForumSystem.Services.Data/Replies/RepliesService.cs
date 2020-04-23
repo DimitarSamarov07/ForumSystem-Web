@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForumSystem.Services.Data.Replies
+﻿namespace ForumSystem.Services.Data.Replies
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
+    using ForumSystem.Services.Mapping;
+    using ForumSystem.Web.ViewModels.Reply;
     using Ganss.XSS;
-    using Mapping;
     using Microsoft.EntityFrameworkCore;
-    using Web.ViewModels.Reply;
 
     public class RepliesService : IReplyService
     {
@@ -48,31 +45,34 @@ namespace ForumSystem.Services.Data.Replies
             return obj;
         }
 
-        public async Task<Reply> GetReplyById(int id)
+        public async Task RemoveReplyAsync(int id)
+        {
+            var replyToRemove = await this.repliesRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (replyToRemove == null)
+            {
+                return;
+            }
+
+            this.repliesRepository.Delete(replyToRemove);
+            await this.repliesRepository.SaveChangesAsync();
+        }
+
+        public async Task<bool> DoesItExist(int id)
+        {
+            var obj = await this.GetReplyById(id);
+
+            return obj != null;
+        }
+
+        private async Task<Reply> GetReplyById(int id)
         {
             var reply = await this.repliesRepository
                 .All()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return reply;
-        }
-
-        public async Task RemoveReplyAsync(int id)
-        {
-            var replyToRemove = await this.repliesRepository
-                .All()
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            this.repliesRepository.Delete(replyToRemove);
-            await this.repliesRepository.SaveChangesAsync();
-        }
-
-        public async Task<bool> DoesItExits(int id)
-        {
-            var obj = await this.repliesRepository.All()
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            return obj != null;
         }
     }
 }
