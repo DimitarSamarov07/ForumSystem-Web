@@ -61,6 +61,26 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "library": "datatables.net-bs@2.1.1",
+      "destination": "wwwroot/lib/datatables.net-bs/"
+    },
+    {
+      "library": "datatables.net@1.10.15",
+      "destination": "wwwroot/lib/datatables.net/"
+    },
+    {
+      "library": "ionicons@2.0.1",
+      "destination": "wwwroot/lib/ionicons/"
+    },
+    {
+      "library": "@fortawesome/fontawesome-free@5.13.0",
+      "destination": "wwwroot/lib//fontawesome/"
+    },
+    {
+      "library": "select2@4.0.3",
+      "destination": "wwwroot/lib/select2/"
     }
   ]
 }
