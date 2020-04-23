@@ -41,7 +41,7 @@
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
-            if (!await this.postService.DoesItExits(id))
+            if (!await this.postService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -93,7 +93,7 @@
         [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!await this.postService.DoesItExits(id))
+            if (!await this.postService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -110,7 +110,7 @@
         [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!await this.postService.DoesItExits(id))
+            if (!await this.postService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -125,7 +125,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!await this.postService.DoesItExits(id))
+            if (!await this.postService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -139,7 +139,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(EditPostModel model)
         {
-            if (!await this.postService.DoesItExits(model.PostId))
+            if (!await this.postService.DoesItExist(model.PostId))
             {
                 return this.NotFound();
             }

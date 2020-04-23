@@ -163,7 +163,7 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> DoesItExits(int id)
+        public async Task<bool> DoesItExist(int id)
         {
             var obj = await this.postsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
             return obj != null;

@@ -35,6 +35,6 @@ namespace ForumSystem.Services.Data.Posts
 
         Task EditPostContent(EditPostModel model);
 
-        Task<bool> DoesItExits(int id);
+        Task<bool> DoesItExist(int id);
     }
 }

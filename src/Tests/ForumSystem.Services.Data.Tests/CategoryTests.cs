@@ -167,7 +167,7 @@
             var expectedObj = JsonConvert.SerializeObject(expected);
             var actualResultObj = JsonConvert.SerializeObject(result);
 
-            // I am serializing the objects to ensure that it won't compare any
+            // I am serializing the objects to ensure that Assert.Equal won't compare any
             // internal properties that I am not trying to compare in this test
             Assert.Equal(expectedObj, actualResultObj);
         }

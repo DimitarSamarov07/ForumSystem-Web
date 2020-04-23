@@ -35,7 +35,7 @@ namespace ForumSystem.Web.Controllers
         [Authorize]
         public async Task<ActionResult<VoteResponseModel>> Post(VoteInputModel input)
         {
-            if (!await this.postService.DoesItExits(input.PostId))
+            if (!await this.postService.DoesItExist(input.PostId))
             {
                 return this.NotFound();
             }

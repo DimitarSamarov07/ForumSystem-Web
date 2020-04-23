@@ -28,7 +28,7 @@
 
         public async Task<IActionResult> Create(int id)
         {
-            if (!await this.postService.DoesItExits(id))
+            if (!await this.postService.DoesItExist(id))
             {
                 return this.NotFound();
             }
@@ -60,7 +60,7 @@
         [HttpPost]
         public async Task<IActionResult> AddReply(PostReplyModel model)
         {
-            if (!await this.postService.DoesItExits(model.PostId))
+            if (!await this.postService.DoesItExist(model.PostId))
             {
                 return this.NotFound();
             }
@@ -93,7 +93,7 @@
         [HttpPost]
         public async Task<IActionResult> Edit(EditReplyModel model)
         {
-            if (!await this.postService.DoesItExits(model.PostId))
+            if (!await this.postService.DoesItExist(model.PostId))
             {
                 return this.NotFound();
             }

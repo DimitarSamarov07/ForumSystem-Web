@@ -125,21 +125,21 @@
         }
 
         [Fact]
-        public async Task DoesItExistsReturnsTrueIfThereAreMatchingEntities()
+        public async Task DoesItExistReturnsTrueIfThereAreMatchingEntities()
         {
             await this.SeedPosts();
 
-            var result = await this.postsService.DoesItExits(this.testPost2.Id);
+            var result = await this.postsService.DoesItExist(this.testPost2.Id);
 
             Assert.True(result);
         }
 
         [Fact]
-        public async Task DoesItExistsReturnsFalseIfThereAreNoMatchingEntities()
+        public async Task DoesItExistReturnsFalseIfThereAreNoMatchingEntities()
         {
             await this.SeedPosts();
 
-            var result = await this.postsService.DoesItExits(123);
+            var result = await this.postsService.DoesItExist(123);
 
             Assert.False(result);
         }
