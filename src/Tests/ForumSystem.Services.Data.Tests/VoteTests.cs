@@ -4,6 +4,7 @@ using System.Text;
 
 namespace ForumSystem.Services.Data.Tests
 {
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using ForumSystem.Data;
@@ -42,7 +43,6 @@ namespace ForumSystem.Services.Data.Tests
         {
             this.InitializeDatabaseAndRepositories();
             this.SeedDatabase();
-            this.InitializeFields();
             this.InitializeMapper();
 
             this.service = new VotesService(this.votesRepository);
@@ -78,6 +78,82 @@ namespace ForumSystem.Services.Data.Tests
                             first.VoteType == VoteType.DownVote;
 
             Assert.True(isSuccess);
+        }
+
+        [Fact]
+        public async Task VoteKeepsTheUpVoteIfItExists()
+        {
+            await this.SeedVotes();
+
+            await this.service.VoteAsync(this.testPost1.Id, this.testUser1.Id, true);
+
+            var first = await this.votesRepository.All()
+                .FirstOrDefaultAsync(
+                    x => x.PostId == this.testPost1.Id
+                         &&
+                         x.UserId == this.testUser1.Id);
+
+            var count = await this.votesRepository.All().CountAsync();
+
+            Assert.True(count == 2);
+            Assert.True(first.VoteType == VoteType.UpVote);
+        }
+
+        [Fact]
+        public async Task VoteKeepsTheDownVoteIfItExists()
+        {
+            await this.SeedVotes();
+
+            await this.service.VoteAsync(this.testPost2.Id, this.testUser2.Id, false);
+
+            var first = await this.votesRepository.All()
+                .FirstOrDefaultAsync(
+                    x => x.PostId == this.testPost1.Id
+                         &&
+                         x.UserId == this.testUser1.Id);
+
+            var count = await this.votesRepository.All().CountAsync();
+
+            Assert.True(count == 2);
+            Assert.True(first.VoteType == VoteType.UpVote);
+        }
+
+        [Fact]
+        public async Task GetVotesFromPostWorksAsExpected()
+        {
+            await this.SeedVotes();
+            var user = new ApplicationUser
+            {
+                Id = "53235532253",
+                Email = "test@forumsyhstem.bg",
+                MemberSince = DateTime.Now,
+                PasswordHash = "1221412214",
+            };
+
+            await this.usersRepository.AddAsync(user);
+            await this.usersRepository.SaveChangesAsync();
+
+            this.testPost1.Votes.Add(
+                new Vote
+            {
+                User = user,
+                VoteType = VoteType.UpVote,
+            });
+
+            this.testPost1.Votes.Add(
+                new Vote
+                {
+                    User = this.testUser2,
+                    VoteType = VoteType.DownVote,
+                });
+
+            this.postsRepository.Update(this.testPost1);
+            await this.postsRepository.SaveChangesAsync();
+            await this.votesRepository.SaveChangesAsync();
+
+            var result = this.service.GetVotesFromPost(this.testPost1.Id);
+
+            Assert.Equal(1, result);
         }
 
         private async void SeedDatabase()
@@ -157,13 +233,6 @@ namespace ForumSystem.Services.Data.Tests
 
         private async Task SeedVotes()
         {
-            await this.votesRepository.AddAsync(this.testUpVote1);
-            await this.votesRepository.AddAsync(this.testDownVote2);
-            await this.votesRepository.SaveChangesAsync();
-        }
-
-        private void InitializeFields()
-        {
             this.testUpVote1 = new Vote
             {
                 Post = this.testPost1,
@@ -177,6 +246,10 @@ namespace ForumSystem.Services.Data.Tests
                 User = this.testUser2,
                 VoteType = VoteType.DownVote,
             };
+
+            await this.votesRepository.AddAsync(this.testUpVote1);
+            await this.votesRepository.AddAsync(this.testDownVote2);
+            await this.votesRepository.SaveChangesAsync();
         }
 
         private void InitializeDatabaseAndRepositories()

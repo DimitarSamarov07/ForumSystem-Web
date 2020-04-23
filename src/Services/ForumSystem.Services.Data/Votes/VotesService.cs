@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Services.Data.Votes
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -43,9 +44,11 @@
         {
             var votesValue = this.votesRepository.All()
                 .Where(x => x.PostId == postId)
-                .Sum(x => (int)x.VoteType);
+                .ToList();
 
-            return votesValue;
+            var obj = votesValue
+                .Sum(x => Convert.ToInt32(x.VoteType));
+            return obj;
         }
     }
 }
