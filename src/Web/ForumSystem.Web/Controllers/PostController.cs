@@ -90,37 +90,6 @@
             return this.RedirectToAction("Index", "Post", new { id = postId });
         }
 
-        [Auth(GlobalConstants.AdministratorRoleName)]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (!await this.postService.DoesItExist(id))
-            {
-                return this.NotFound();
-            }
-
-            var user = await this.userManager.GetUserAsync(this.User);
-
-            var model = await this.postService.GetByIdAsync<PostListingViewModel>(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ActionName("Delete")]
-        [Auth(GlobalConstants.AdministratorRoleName)]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (!await this.postService.DoesItExist(id))
-            {
-                return this.NotFound();
-            }
-
-            var post = await this.postService.GetByIdAsync(id);
-
-            await this.postService.RemovePostAsync(id);
-            return this.RedirectToAction("Details", "Category", new { id = post.CategoryId });
-        }
-
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Edit(int id)

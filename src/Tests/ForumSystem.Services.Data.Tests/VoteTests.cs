@@ -45,7 +45,7 @@ namespace ForumSystem.Services.Data.Tests
             this.SeedDatabase();
             this.InitializeMapper();
 
-            this.service = new VotesService(this.votesRepository);
+            this.service = new VotesService(this.votesRepository, this.postsRepository);
         }
 
         [Fact]

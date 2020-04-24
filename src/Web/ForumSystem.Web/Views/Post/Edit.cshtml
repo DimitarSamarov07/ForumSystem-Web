@@ -6,7 +6,19 @@
 
 <h1>Editing post with title ,,@Model.PostTitle"</h1>
 
-<head>
+
+<form asp-controller="Post" asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" id="mytextarea">@Model.Content</textarea>
+        <input asp-for="PostId" type="hidden" />
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="reset" class="btn btn-danger">Reset</button>
+    <p class="text-danger">Note: You can't edit the post's title</p>
+</form>
+
+@section Scripts{
     <script src="~/lib/tinymce/tinymce.min.js"></script>
     <script type="text/javascript">
         tinymce.init({
@@ -16,16 +28,4 @@
             ]
         });
     </script>
-
-</head>
-
-<form asp-controller="Post" asp-action="Edit" method="post">
-    <div class="form-group">
-        <label asp-for="Content"></label>
-        <textarea asp-for="Content" id="mytextarea">@Model.Content</textarea>
-        <input asp-for="PostId" type="hidden"/>
-    </div>
-    <button type="submit" class="btn btn-success">Submit</button>
-    <button type="reset" class="btn btn-danger">Reset</button>
-    <p class="text-danger">Note: You can't edit the post's title</p>
-</form>
+}

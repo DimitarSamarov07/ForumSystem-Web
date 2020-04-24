@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ForumSystem.Web.Areas.Administration.Controllers
+﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using CloudinaryDotNet;
-    using Data.Models;
-    using Infrastructure.Extensions;
+    using ForumSystem.Data.Models;
+    using ForumSystem.Services.Data.Categories;
+    using ForumSystem.Services.Data.Posts;
+    using ForumSystem.Web.Infrastructure.Extensions;
+    using ForumSystem.Web.ViewModels.Categories;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Query.Internal;
-    using Services.Data.Categories;
-    using Services.Data.Posts;
-    using ViewModels;
-    using ViewModels.Categories;
 
     public class CategoryController : AdministrationController
     {
@@ -103,6 +99,7 @@ namespace ForumSystem.Web.Areas.Administration.Controllers
         public async Task<ActionResult<DeleteCategoryModel>> Delete(int id)
         {
             await this.categoryService.RemoveCategory(id);
+            Thread.Sleep(1000);
             return new DeleteCategoryModel { Id = id };
         }
 

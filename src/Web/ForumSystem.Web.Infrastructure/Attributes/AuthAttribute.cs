@@ -36,8 +36,7 @@
 
         private bool SkipAuthorization(ResultExecutingContext filterContext)
         {
-            var attribute = (filterContext.ActionDescriptor as ControllerActionDescriptor)
-                .MethodInfo
+            var attribute = (filterContext.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo
                 .GetCustomAttributes<AllowAnonymousAttribute>().FirstOrDefault();
 
             return attribute == null;

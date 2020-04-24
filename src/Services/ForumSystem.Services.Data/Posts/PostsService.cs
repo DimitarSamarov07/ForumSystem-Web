@@ -63,7 +63,7 @@
             var post = await this.GetByIdAsync(id);
 
             this.postsRepository.Delete(post);
-            await this.postsRepository.SaveChangesAsync();
+            this.postsRepository.SaveChangesAsync().Wait();
         }
 
         public async Task<Post> GetByIdAsync(int id)

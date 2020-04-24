@@ -1,4 +1,7 @@
-﻿<style>
+﻿@{
+    ViewData["Title"] = "Global Chat";
+}
+<style>
     div.panel-body {
         overflow: scroll;
         background: url('http://subtlepatterns.com/patterns/geometry2.png');
@@ -41,6 +44,7 @@
                 $('#discussion')
                     .append(`<p style="color:green; text-align:left; width:500px"><strong><img = src="https://www.phplivesupport.com/pics/icons/avatars/public/avatar_7.png"> </strong> ${
                         htmlEncode(message.text)}</p>`);
+                scrollToTheBottom();
 
 
             });
@@ -49,7 +53,6 @@
             var message = $("#message").val();
             connection.invoke("Send", message);
             $('#message').val('').focus();
-            scrollToTheBottom();
         });
 
         $('#message').keypress(function (e) {
@@ -59,7 +62,6 @@
                 var message = $("#message").val();
                 if (!isNullOrWhitespace(message)) {
                     connection.invoke("Send", message);
-                    scrollToTheBottom();
                 }
                 $('#message').val('').focus();
 

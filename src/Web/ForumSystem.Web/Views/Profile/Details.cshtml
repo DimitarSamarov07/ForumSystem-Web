@@ -48,7 +48,7 @@
                             <span id="userEmailLabel">Email: @Model.Email</span> <br />
                             <span id="userCreatedLabel">Member Since: @Model.MemberSince</span> <br />
                         </p>
-                        <a asp-controller="Manage" asp-action="Index" asp-route-id="@Model.UserId" class="btn btn-warning">Manage your account</a>
+                        <a asp-area="Identity" asp-page="/Index" asp-route-id="@Model.UserId" class="btn btn-warning">Manage your account</a>
                     </div>
                 </div>
             </div>

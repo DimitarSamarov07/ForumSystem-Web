@@ -1,0 +1,95 @@
+﻿@model ForumSystem.Web.ViewModels.Posts.PostsFromCategoryViewModel
+<section class="content-header">
+    <h1>
+        Posts from @Model.Category.Title
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Posts</li>
+    </ol>
+</section>
+<!-- Main content -->
+<form id="antiForgeryForm" method="post">
+</form>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-header">
+                    <h3 class="box-title">Manage Posts</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                <th>Author Name</th>
+                                <th>Total Votes</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.Posts)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AuthorName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalVotes)</td>
+                                    <td>
+                                        <a asp-area="Administration" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a href="" onclick="Delete('@item.Id')">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@section Scripts{
+    <!-- DataTables -->
+    <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- page script -->
+    <script>
+        $(function() {
+            $('#table').DataTable();
+        });
+
+        function Delete(id) {
+            var token = $("#antiForgeryForm input[name=__RequestVerificationToken]").val();
+            var r = confirm("Are you sure you want to Delete?");
+            if (r === true) {
+
+                $.ajax(
+                    {
+                        url: '@Url.Action("Delete", "Post")',
+                        type: "POST",
+                        data: { id: id },
+                        dataType: "json",
+                        headers: { 'X-CSRF-TOKEN': token },
+                        success: function(response) {
+                            var baseUrl = "/Categories";
+                            window.location.reload();
+                        },
+                        error: function(response) {
+                            console.log(result);
+                        }
+                    });
+
+            }
+        }
+    </script>
+}
+

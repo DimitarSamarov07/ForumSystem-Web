@@ -44,7 +44,8 @@
                                 <td>@Html.DisplayFor(modelItem => item.NumberOfUsers)</td>
                                 <td>
                                     <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a href="" onclick="Delete('@item.Id')">Delete</a>
+                                    <a href="" onclick="Delete('@item.Id')">Delete</a> |
+                                    <a asp-controller="Post" asp-action="ByCategory" asp-route-id="@item.Id">View Posts</a>
                                 </td>
                             </tr>
                             }
@@ -60,8 +61,8 @@
 </section>
 @section Scripts{
     <!-- DataTables -->
-    <script src="~/AdminLTE/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="~/AdminLTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     <!-- page script -->
     <script>
         $(function() {

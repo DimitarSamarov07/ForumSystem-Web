@@ -11,19 +11,33 @@
     public class VotesService : IVoteService
     {
         private readonly IRepository<Vote> votesRepository;
+        private readonly IDeletableEntityRepository<Post> postsRepository;
 
-        public VotesService(IRepository<Vote> votesRepository)
+        public VotesService(IRepository<Vote> votesRepository, IDeletableEntityRepository<Post> postsRepository)
         {
             this.votesRepository = votesRepository;
+            this.postsRepository = postsRepository;
         }
 
         public async Task VoteAsync(int postId, string userId, bool isUpVote)
         {
             var vote = this.votesRepository.All()
                 .FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
+            var post = this.postsRepository.All().FirstOrDefault(x => x.Id == postId);
             if (vote != null)
             {
-                vote.VoteType = isUpVote ? VoteType.UpVote : VoteType.DownVote;
+                if (isUpVote)
+                {
+                    post.Author.KarmaPoints++;
+                    vote.VoteType = VoteType.UpVote;
+                }
+                else
+                {
+                    // Yes it is possible for an author
+                    // to have negative karma points
+                    post.Author.KarmaPoints--;
+                    vote.VoteType = VoteType.DownVote;
+                }
             }
             else
             {
@@ -33,6 +47,14 @@
                     UserId = userId,
                     VoteType = isUpVote ? VoteType.UpVote : VoteType.DownVote,
                 };
+                if (vote.VoteType == VoteType.UpVote)
+                {
+                    post.Author.KarmaPoints++;
+                }
+                else
+                {
+                    post.Author.KarmaPoints--;
+                }
 
                 await this.votesRepository.AddAsync(vote);
             }

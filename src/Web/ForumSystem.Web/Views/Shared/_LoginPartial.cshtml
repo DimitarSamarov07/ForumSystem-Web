@@ -8,20 +8,17 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @User.Identity.Name!</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Details" asp-route-id="@this.UserManager.GetUserId(User)">Hello @User.Identity.Name!</a>
         </li>
         <li class="dropdown show">
             <a href="#" class="btn  dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Settings</a>
             <ul class="dropdown-menu">
                 <div role="separator" class="dropdown-divider"></div>
-                <div class="dropdown-header">Profile</div>
-                <a class="dropdown-item" asp-controller="Profile" asp-action="Details" asp-route-id="@UserManager.GetUserId(User)">My Profile</a>
                 @if (User.IsInRole("Admin"))
                 {
                     <div role="separator" class="dropdown-divider"></div>
                     <div class="dropdown-header">Admin</div>
-                    <a class="dropdown-item" asp-controller="Category" asp-action="Create">Create forum</a>
-                    <a class="dropdown-item" asp-controller="Profile" asp-action="Index">View Users</a>
+                    <a class="dropdown-item" asp-area="Administration" asp-controller="Category" asp-action="Index">Open Admin Panel</a>
                 }
             </ul>
         </li>

@@ -6,6 +6,8 @@
 
     public class EditPostModel : IMapFrom<Post>, IHaveCustomMappings
     {
+        public int CategoryId { get; set; }
+
         public int PostId { get; set; }
 
         public string PostTitle { get; set; }
