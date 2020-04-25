@@ -2,8 +2,7 @@
 {
     using ForumSystem.Common;
     using ForumSystem.Web.Controllers;
-    using Infrastructure.Attributes;
-    using Microsoft.AspNetCore.Authorization;
+    using ForumSystem.Web.Infrastructure.Attributes;
     using Microsoft.AspNetCore.Mvc;
 
     [Auth(GlobalConstants.AdministratorRoleName)]

@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Data.Models;
+    using ForumSystem.Services.Data.Models.Posts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data.Categories;
@@ -58,7 +59,14 @@
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
             model.AuthorId = this.userManager.GetUserId(this.User);
-            int postId = await this.postService.CreatePostAsync(model);
+            var serviceModel = new PostCreateServiceModel
+            {
+                Title = model.Title,
+                AuthorId = model.AuthorId,
+                CategoryId = model.CategoryId,
+                Content = model.Content,
+            };
+            int postId = await this.postService.CreatePostAsync(serviceModel);
 
             return this.RedirectToAction("ByCategory", "Post", new { id = model.CategoryId });
         }

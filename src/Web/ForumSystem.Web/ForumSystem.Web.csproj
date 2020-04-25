@@ -43,7 +43,6 @@
     <Content Include="wwwroot\AdminLTE\bower_components\bootstrap\package.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Areas\Administration\Views\Dashboard\Dashboard.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_LoginPartial.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
@@ -204,6 +203,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ForumSystem.Data.Models\ForumSystem.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\ForumSystem.Data\ForumSystem.Data.csproj" />
+    <ProjectReference Include="..\..\ForumSyste.Services.Data.Models\ForumSystem.Services.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Data\ForumSystem.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Mapping\ForumSystem.Services.Mapping.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Messaging\ForumSystem.Services.Messaging.csproj" />

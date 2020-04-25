@@ -8,16 +8,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>List of forums</h1>
-@if (User.IsInRole("Admin"))
-{
-
-    <a class="btn btn-outline-success" asp-controller="Category" asp-action="Create">Create new Forum</a>
-    <br />
-    <br />
-
-
-}
+<h1>List of categories</h1>
 
 <table class="table table-bordered table-hover">
 
@@ -44,12 +35,6 @@
                                 @category.NumberOfPosts Posts by
                                 @category.NumberOfUsers Users
                             </div>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <br />
-                                <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
-
-                            }
                         </div>
 
 

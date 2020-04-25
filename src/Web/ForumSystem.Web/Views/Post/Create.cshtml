@@ -6,19 +6,6 @@
 
 <h1>New Post in @Model.CategoryName</h1>
 
-<head>
-    <script src="~/lib/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: '#mytextarea',
-            plugins: [
-                "image paste table link code media"
-            ]
-        });
-    </script>
-
-</head>
-
 <form asp-action="AddPost" method="post">
     <div class="form-group">
         <label asp-for="Title"></label>
@@ -33,4 +20,16 @@
     <input asp-for="CategoryId" type="hidden" />
 
 </form>
+
+@section Scripts{
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+                "image paste table link code media"
+            ]
+        });
+    </script>
+}
 

@@ -23,9 +23,8 @@ namespace ForumSystem.Web.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        public IActionResult OnGet(string returnUrl = "/")
+        public void OnGet()
         {
-            return this.RedirectToPage("./Logout", "OnPost", new { returnUrl = returnUrl });
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)

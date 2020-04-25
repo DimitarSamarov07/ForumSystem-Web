@@ -7,6 +7,7 @@
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Data.Models.Enums;
+    using Microsoft.EntityFrameworkCore;
 
     public class VotesService : IVoteService
     {
@@ -23,7 +24,7 @@
         {
             var vote = this.votesRepository.All()
                 .FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
-            var post = this.postsRepository.All().FirstOrDefault(x => x.Id == postId);
+            var post = this.postsRepository.All().Include(x => x.Author).FirstOrDefault(x => x.Id == postId);
             if (vote != null)
             {
                 if (isUpVote)

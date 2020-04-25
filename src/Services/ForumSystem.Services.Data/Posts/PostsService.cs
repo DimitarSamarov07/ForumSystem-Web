@@ -12,6 +12,7 @@
     using ForumSystem.Web.ViewModels.Posts;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
+    using Models.Posts;
 
     public class PostsService : IPostService
     {
@@ -44,7 +45,7 @@
             return obj;
         }
 
-        public async Task<int> CreatePostAsync(NewPostModel model)
+        public async Task<int> CreatePostAsync(PostCreateServiceModel model)
         {
             var post = new Post
             {
@@ -55,7 +56,7 @@
             };
 
             await this.postsRepository.AddAsync(post);
-            this.postsRepository.SaveChangesAsync().Wait();
+            await this.postsRepository.SaveChangesAsync();
             return post.Id;
         }
 

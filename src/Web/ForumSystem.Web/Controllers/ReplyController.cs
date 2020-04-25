@@ -2,13 +2,15 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Data.Models;
+
+    using ForumSystem.Data.Models;
+    using ForumSystem.Services.Data.Models.Replies;
+    using ForumSystem.Services.Data.Posts;
+    using ForumSystem.Services.Data.Replies;
+    using ForumSystem.Web.ViewModels.Reply;
     using Ganss.XSS;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data.Posts;
-    using Services.Data.Replies;
-    using ViewModels.Reply;
 
     public class ReplyController : BaseController
     {
@@ -98,7 +100,13 @@
                 return this.NotFound();
             }
 
-            await this.replyService.EditReplyContent(model);
+            var serviceModel = new EditReplyServiceModel
+            {
+                ReplyId = model.ReplyId,
+                Content = model.Content,
+            };
+
+            await this.replyService.EditReplyContent(serviceModel);
             return this.RedirectToAction("Index", "Post", new { id = model.PostId });
         }
     }

@@ -45,6 +45,11 @@
             return this.View(model);
         }
 
+        public IActionResult Rules()
+        {
+            return this.RedirectToAction("Index", "Document", new { title = GlobalConstants.RulesPageDocumentTitle });
+        }
+
         [Authorize]
         public IActionResult Chat()
         {
@@ -68,7 +73,7 @@
             latestPosts = await this.CheckPostsForAuthorRole(latestPosts);
             popularPosts = await this.CheckPostsForAuthorRole(popularPosts);
 
-            return new IndexViewModel()
+            return new IndexViewModel
             {
                 LatestPosts = latestPosts,
                 PopularPosts = popularPosts,

@@ -102,19 +102,6 @@
             return this.View(model);
         }
 
-        //[Auth(GlobalConstants.AdministratorRoleName)]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    if (!await this.DoesItExist(id))
-        //    {
-        //        return this.NotFound();
-        //    }
-
-        //    var model = await this.categoryService.GetByIdAsync<CategoryListingViewModel>(id);
-
-        //    return this.View(model);
-        //}
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Search(int id, string searchQuery)

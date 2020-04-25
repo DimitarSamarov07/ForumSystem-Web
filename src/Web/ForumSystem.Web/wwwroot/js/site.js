@@ -30,6 +30,6 @@ function topFunction() {
 function change()
 {
     var elem = document.getElementById("myButton1");
-    if (elem.value == "Hide list of forums") elem.value = "Show list of forums";
-    else elem.value = "Hide list of forums";
+    if (elem.value == "Hide list of categories") elem.value = "Show list of categories";
+    else elem.value = "Hide list of categories";
 }

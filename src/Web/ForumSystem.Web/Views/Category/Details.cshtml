@@ -38,8 +38,8 @@ else
 {
     <p class="text-muted">
         You must be a registered user to add new posts.
-        <a class=" text-dark" asp-controller="Account" asp-action="Login">Login</a> or
-        <a class=" text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        <a class=" text-dark" a asp-area="Identity" asp-page="/Account/Register">Login</a> or
+        <a class=" text-dark"  asp-area="Identity" asp-page="/Account/Register">Register</a>
         now.
     </p>
 
@@ -51,7 +51,7 @@ else
 @if (Model.Posts.Any())
 {
     <div>
-        <form asp-controller="Category" asp-action="Search" method="post">
+        <form asp-controller="Category" asp-action="Search" asp-route-id="@Model.Category.Id" method="post">
             <div class="row">
                 <div class="col-10">
                     <input class="form-control" asp-for="SearchQuery" type="text" placeholder="Search this forum" onfocus="clearThis(this)" />

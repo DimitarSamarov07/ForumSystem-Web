@@ -13,6 +13,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data.Categories;
+    using Services.Data.Models.Posts;
     using Services.Data.Posts;
     using Services.Mapping;
     using ViewModels.Categories;
@@ -85,7 +86,14 @@
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
             model.AuthorId = this.userManager.GetUserId(this.User);
-            int postId = await this.postService.CreatePostAsync(model);
+            var serviceModel = new PostCreateServiceModel
+            {
+                Content = model.Content,
+                Title = model.Title,
+                AuthorId = model.AuthorId,
+                CategoryId = model.CategoryId,
+            };
+            int postId = await this.postService.CreatePostAsync(serviceModel);
 
             return this.RedirectToAction("Index", "Post", new { id = postId });
         }

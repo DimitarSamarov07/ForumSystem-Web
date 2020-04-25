@@ -14,6 +14,7 @@
     using ForumSystem.Web.ViewModels.Reply;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
+    using Models.Replies;
     using Newtonsoft.Json;
     using Xunit;
 
@@ -104,10 +105,9 @@
         [Fact]
         public async Task EditReplyContentEditsTheContent()
         {
-            var obj = new EditReplyModel
+            var obj = new EditReplyServiceModel()
             {
                 ReplyId = this.testReply1.Id,
-                PostId = this.testReply1.PostId,
                 Content = "New content 1234",
             };
 
@@ -121,10 +121,9 @@
         [Fact]
         public async Task EditReplyContentSanitizesTheContent()
         {
-            var obj = new EditReplyModel
+            var obj = new EditReplyServiceModel()
             {
                 ReplyId = this.testReply1.Id,
-                PostId = this.testReply1.PostId,
                 Content = "<script>alert(\"Hacked!\")</script><p>New content 1234</p>",
             };
 
@@ -137,6 +136,7 @@
         }
 
         [Fact]
+        [Obsolete]
         public async Task GetByIdGetsTheRightEntity()
         {
             var model = new EditReplyModel
@@ -149,8 +149,8 @@
 
             var result = await this.service.GetReplyById<EditReplyModel>(this.testReply2.Id);
 
-            var expected = JsonConvert.SerializeObject(model);
-            var actual = JsonConvert.SerializeObject(result);
+            var expected = await JsonConvert.SerializeObjectAsync(model);
+            var actual = await JsonConvert.SerializeObjectAsync(result);
 
             // I am serializing the objects to ensure that it Assert.Equal won't compare any
             // internal properties that I am not trying to compare in this test

@@ -8,6 +8,7 @@ namespace ForumSystem.Services.Data.Posts
     using System.Threading.Tasks;
     using ForumSystem.Data.Models;
     using ForumSystem.Web.ViewModels.Posts;
+    using Models.Posts;
 
     public interface IPostService
     {
@@ -17,7 +18,7 @@ namespace ForumSystem.Services.Data.Posts
         IQueryable<T> GetAllFromCategoryАsQueryable<T>(int categoryId)
             where T : class;
 
-        Task<int> CreatePostAsync(NewPostModel model);
+        Task<int> CreatePostAsync(PostCreateServiceModel model);
 
         Task RemovePostAsync(int id);
 

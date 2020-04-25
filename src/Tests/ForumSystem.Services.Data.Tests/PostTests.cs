@@ -14,6 +14,7 @@
     using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
+    using Models.Posts;
     using Xunit;
 
     public class PostTests
@@ -51,7 +52,7 @@
         [Fact]
         public async Task CreateWorks()
         {
-            var model1 = new NewPostModel
+            var model1 = new PostCreateServiceModel
             {
                 Title = this.testPost1.Title,
                 Content = this.testPost1.Content,
@@ -59,7 +60,7 @@
                 CategoryId = this.testCategory1.Id,
             };
 
-            var model2 = new NewPostModel
+            var model2 = new PostCreateServiceModel
             {
                 Title = this.testPost2.Title,
                 Content = this.testPost2.Content,

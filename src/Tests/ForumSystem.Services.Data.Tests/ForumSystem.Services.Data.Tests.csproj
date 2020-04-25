@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ForumSystem.Data\ForumSystem.Data.csproj" />
+    <ProjectReference Include="..\..\ForumSyste.Services.Data.Models\ForumSystem.Services.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Data\ForumSystem.Services.Data.csproj" />
   </ItemGroup>
 

@@ -11,9 +11,9 @@
 <div class="card">
     @if (Model.IsCurrentUserAuthorOrAdmin)
     {
-    <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@Model.Id">
-        <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
-    </form>
+        <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@Model.Id">
+            <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
+        </form>
     }
     <div class="card-body row">
         <div class="col-2 text-center">
@@ -23,8 +23,12 @@
             <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.AuthorId">@Model.AuthorName</a>
             @if (Model.IsAuthorAdmin)
             {
-            <br />
-            <p class="badge badge-dark" style="width: 60px;">@Model.AuthorName</p>
+                <br />
+                <p class="badge badge-dark" style="width: 60px;">@Model.AuthorName</p>
+            }
+            else
+            {
+                <p class="badge badge-success" style="width: 60px;">@Model.AuthorName</p>
             }
             <br />
             Points:
@@ -59,50 +63,54 @@
 
 @if (Model.Replies.Any())
 {
-<b style="font-size: 30px">Replies:</b>
+    <b style="font-size: 30px">Replies:</b>
     foreach (var reply in Model.Replies)
     {
 
 
-<br />
+        <br />
 
-<div class="card">
-    @if (this.User.IsAdmin() || this.User.Identity.Name == reply.AuthorName)
+        <div class="card">
+            @if (this.User.IsAdmin() || this.User.Identity.Name == reply.AuthorName)
+            {
+                <form method="get" asp-controller="Reply" asp-action="Edit" asp-route-id="@reply.Id">
+                    <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
+                </form>
+            }
+            <div class="card-body row">
+                <div class="col-2 text-center">
+                    <img src="@reply.AuthorImageUrl" class="img-circle-post" />
+
+                    <br />
+                    <a asp-controller="Profile" asp-action="Details" asp-route-id="@reply.AuthorId">@reply.AuthorName</a>
+                    @if (reply.IsAuthorAdmin)
                     {
-    <form method="get" asp-controller="Reply" asp-action="Edit" asp-route-id="@reply.Id">
-        <button class="btn btn-custom-post"><i class="fa fa-edit"> Edit</i></button>
-    </form>
+                        <br />
+                        <p class="badge badge-dark" style="width: 60px;">@Model.AuthorName</p>
                     }
-    <div class="card-body row">
-        <div class="col-2 text-center">
-            <img src="@reply.AuthorImageUrl" class="img-circle-post" />
+                    <br />
+                    else
+                    {
+                    <p class="badge badge-success" style="width: 60px;">@Model.AuthorName</p>
+                    }
+                    Points:
+                    (@reply.KarmaPoints)
 
-            <br />
-            <a asp-controller="Profile" asp-action="Details" asp-route-id="@reply.AuthorId">@reply.AuthorName</a>
-            @if (reply.IsAuthorAdmin)
-                            {
-            <br />
-            <p class="badge badge-dark" style="width: 60px;">Admin</p>
-                            }
-            <br />
-            Points:
-            (@reply.KarmaPoints)
+                </div>
+                <div class="col-10">
 
+                    <p class="card-text"> @Html.Raw(reply.ReplyContent)</p>
+
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Posted on: @reply.Created
+            </div>
+
+            <div class="text-muted small ml-3">
+
+            </div>
         </div>
-        <div class="col-10">
-
-            <p class="card-text"> @Html.Raw(reply.ReplyContent)</p>
-
-        </div>
-    </div>
-    <div class="card-footer text-muted">
-        Posted on: @reply.Created
-    </div>
-
-    <div class="text-muted small ml-3">
-
-    </div>
-</div>
 
 
 
@@ -114,9 +122,9 @@
 
 else
 {
-<div class="text-center text-primary">
-    <h3>There are no replies to this post</h3>
-</div>
+    <div class="text-center text-primary">
+        <h3>There are no replies to this post</h3>
+    </div>
 }
 
 
@@ -128,18 +136,18 @@ else
 
 @if (User.Identity.IsAuthenticated)
 {
-<div class="row">
-    <span><a class="btn btn-dark" asp-controller="Reply" asp-action="Create" asp-route-id="@Model.Id">Add a Reply</a></span>
-</div>
+    <div class="row">
+        <span><a class="btn btn-dark" asp-controller="Reply" asp-action="Create" asp-route-id="@Model.Id">Add a Reply</a></span>
+    </div>
 }
 else
 {
-<p class="text-center text-dark">
-    You must be a registered user to add a reply.
-    <a class=" text-primary" asp-controller="Account" asp-action="Login">Login</a> or
-    <a class=" text-primary" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-    now.
-</p>
+    <p class="text-center text-dark">
+        You must be a registered user to add a reply.
+        <a class=" text-primary" asp-area="Identity" asp-page="/Account/Register">Login</a> or
+        <a class=" text-primary" a asp-area="Identity" asp-page="/Account/Register">Register</a>
+        now.
+    </p>
 }
 
 
@@ -156,10 +164,10 @@ else
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 headers: { 'X-CSRF-TOKEN': token },
-                success: function(data) {
+                success: function (data) {
                     $("#votesCount").html(data.votesCount);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
                     alert(err.TITLE);
                 }

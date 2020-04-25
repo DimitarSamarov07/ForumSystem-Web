@@ -7,5 +7,7 @@
         public const string AdministratorRoleName = "Admin";
 
         public const string PrivacyPageDocumentTitle = "Privacy";
+
+        public const string RulesPageDocumentTitle = "Rules";
     }
 }

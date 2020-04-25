@@ -9,6 +9,7 @@
     using ForumSystem.Web.ViewModels.Reply;
     using Ganss.XSS;
     using Microsoft.EntityFrameworkCore;
+    using Models.Replies;
 
     public class RepliesService : IReplyService
     {
@@ -25,7 +26,7 @@
             await this.repliesRepository.SaveChangesAsync();
         }
 
-        public async Task EditReplyContent(EditReplyModel model)
+        public async Task EditReplyContent(EditReplyServiceModel model)
         {
             var reply = await this.GetReplyById(model.ReplyId);
             var content = new HtmlSanitizer().Sanitize(model.Content);
