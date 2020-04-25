@@ -1,4 +1,5 @@
 ﻿@using ForumSystem.Data.Models
+@using ForumSystem.Web.ViewModels.Profile
 @using Microsoft.AspNetCore.Identity
 @model ForumSystem.Web.ViewModels.Profile.ProfileModel
 
@@ -48,7 +49,13 @@
                             <span id="userEmailLabel">Email: @Model.Email</span> <br />
                             <span id="userCreatedLabel">Member Since: @Model.MemberSince</span> <br />
                         </p>
-                        <a asp-area="Identity" asp-page="/Index" asp-route-id="@Model.UserId" class="btn btn-warning">Manage your account</a>
+                        @if (this.User.Identity.Name == Model.Username)
+                        {
+                            @await Html.PartialAsync("_ModalProfilePartial",
+                                new ChangeProfilePictureInputModel{UserId = Model.UserId});
+
+                            <a href="/Identity/Account/Manage?id=@Model.UserId" class="btn btn-warning">Manage your account</a>
+                        }
                     </div>
                 </div>
             </div>

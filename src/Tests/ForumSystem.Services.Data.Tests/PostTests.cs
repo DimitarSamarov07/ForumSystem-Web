@@ -105,8 +105,8 @@
         {
             await this.SeedPosts();
 
-            var result = await this.postsService
-                .GetAllFromCategory<PostListingViewModel>(this.testCategory1.Id);
+            var result = this.postsService
+                .GetAllFromCategoryАsQueryable<PostListingViewModel>(this.testCategory1.Id);
 
             var isSuccessful = result.Count() == 2;
 

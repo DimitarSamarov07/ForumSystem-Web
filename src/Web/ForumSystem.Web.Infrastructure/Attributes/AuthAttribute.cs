@@ -23,7 +23,7 @@
             {
                 if (!filterContext.HttpContext.User.IsInRole(this._role))
                 {
-                    filterContext.Result = new RedirectToActionResult("401", "Error", null);
+                    filterContext.Result = new RedirectToActionResult("401", "Error", new { area = string.Empty });
                 }
                 else
                 {

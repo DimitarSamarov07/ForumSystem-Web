@@ -37,7 +37,8 @@
             where T : class
         {
             var obj = this.postsRepository.All()
-                 .Where(x => x.Category.Id == categoryId)
+                 .Where(x => x.CategoryId == categoryId)
+                 .Include(x => x.Author)
                  .To<T>();
 
             return obj;

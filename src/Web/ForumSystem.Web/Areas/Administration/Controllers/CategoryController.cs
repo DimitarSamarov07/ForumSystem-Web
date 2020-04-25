@@ -4,32 +4,23 @@
     using System.Threading.Tasks;
 
     using CloudinaryDotNet;
-    using ForumSystem.Data.Models;
     using ForumSystem.Services.Data.Categories;
-    using ForumSystem.Services.Data.Posts;
     using ForumSystem.Web.Infrastructure.Extensions;
     using ForumSystem.Web.ViewModels.Categories;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoryController : AdministrationController
     {
         private readonly ICategoryService categoryService;
-        private readonly IPostService postsService;
         private readonly Cloudinary cloudinary;
-        private readonly UserManager<ApplicationUser> userManager;
 
         public CategoryController(
             ICategoryService categoryService,
-            IPostService postsService,
-            Cloudinary cloudinary,
-            UserManager<ApplicationUser> userManager)
+            Cloudinary cloudinary)
         {
             this.categoryService = categoryService;
-            this.postsService = postsService;
             this.cloudinary = cloudinary;
-            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -99,7 +90,6 @@
         public async Task<ActionResult<DeleteCategoryModel>> Delete(int id)
         {
             await this.categoryService.RemoveCategory(id);
-            Thread.Sleep(1000);
             return new DeleteCategoryModel { Id = id };
         }
 

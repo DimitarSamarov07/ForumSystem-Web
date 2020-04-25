@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace ForumSystem.Web.Controllers
 {
+    using CloudinaryDotNet;
     using Common;
     using Data.Models;
     using Infrastructure.Attributes;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using MoreLinq.Extensions;
@@ -19,10 +21,12 @@ namespace ForumSystem.Web.Controllers
     public class ProfileController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly Cloudinary cloudinary;
 
-        public ProfileController(UserManager<ApplicationUser> userManager)
+        public ProfileController(UserManager<ApplicationUser> userManager, Cloudinary cloudinary)
         {
             this.userManager = userManager;
+            this.cloudinary = cloudinary;
         }
 
         [Auth(GlobalConstants.AdministratorRoleName)]
@@ -54,7 +58,7 @@ namespace ForumSystem.Web.Controllers
             }
 
             var isUserAdmin = await this.userManager.IsUserAdmin(user);
-            var model = new ProfileModel()
+            var model = new ProfileModel
             {
                 UserId = user.Id,
                 Username = user.UserName,
@@ -66,6 +70,28 @@ namespace ForumSystem.Web.Controllers
             };
 
             return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeProfileImage(ChangeProfilePictureInputModel input)
+        {
+            var user = await this.userManager.FindByIdAsync(input.UserId);
+
+            if (this.User.Identity.Name != user.UserName)
+            {
+                return this.NotFound();
+            }
+
+            user.ProfileImageUrl = await this.Upload(input.ImageUpload);
+            await this.userManager.UpdateAsync(user);
+
+            return this.RedirectToAction("Details", "Profile", new { id = input.UserId });
+        }
+
+        private async Task<string> Upload(IFormFile file)
+        {
+            var uri = await this.cloudinary.UploadAsync(file);
+            return uri;
         }
     }
 }

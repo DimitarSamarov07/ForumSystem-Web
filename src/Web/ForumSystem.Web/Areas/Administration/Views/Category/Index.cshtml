@@ -46,6 +46,7 @@
                                     <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                                     <a href="" onclick="Delete('@item.Id')">Delete</a> |
                                     <a asp-controller="Post" asp-action="ByCategory" asp-route-id="@item.Id">View Posts</a>
+                                    <a asp-area="Administration" asp-controller="Post" asp-action="AddPost" asp-route-id="@item.Id">Create Post</a>
                                 </td>
                             </tr>
                             }

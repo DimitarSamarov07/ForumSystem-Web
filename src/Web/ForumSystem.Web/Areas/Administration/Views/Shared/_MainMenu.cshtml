@@ -26,14 +26,23 @@
     </li>
 
     <li class="treeview">
-    <a>
-        <i class="fa fa-link"></i> <span>Posts</span>
-        <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-        </span>
-    </a>
-    <ul class="treeview-menu">
-        <li><a asp-area="Administration" asp-controller="Post" asp-action="Create">List all</a></li>
-    </ul>
+        <a>
+            <i class="fa fa-link"></i> <span>Posts</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a asp-area="Administration" asp-controller="Category" asp-action="Index" onclick="PostAlert()">Create</a></li>
+        </ul>
     </li>
 </ul>
+
+@section Scripts{
+    <script>
+        function PostAlert() {
+            alert("Please use the ,,Create Post link'' bellow the desired category :)");
+        }
+    </script>
+
+}

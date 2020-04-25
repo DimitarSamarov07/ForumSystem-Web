@@ -43,7 +43,9 @@
                                     <td>@Html.DisplayFor(modelItem => item.TotalVotes)</td>
                                     <td>
                                         <a asp-area="Administration" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a href="" onclick="Delete('@item.Id')">Delete</a>
+                                        <a href="" onclick="Delete('@item.Id')">Delete</a> |
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-id="@item.Id">View in forum</a>
+
                                     </td>
                                 </tr>
                             }

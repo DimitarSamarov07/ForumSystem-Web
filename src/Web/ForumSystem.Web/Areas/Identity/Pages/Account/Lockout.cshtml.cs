@@ -26,10 +26,10 @@
         [DataType(DataType.DateTime)]
         public DateTime LockoutEnd { get; set; }
 
-        public async void OnGetUser(string id)
+        public async void OnGetUser(string name)
         {
-            logger.LogWarning("{0}", id);
-            var user = await this.userManager.FindByIdAsync(id);
+            logger.LogWarning("{0}", name);
+            var user = await this.userManager.FindByNameAsync(name);
             var lockoutEnd = user.LockoutEnd.Value.DateTime;
 
             this.LockoutEnd = lockoutEnd;

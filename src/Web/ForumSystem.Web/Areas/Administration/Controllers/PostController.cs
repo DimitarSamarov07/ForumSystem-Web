@@ -1,10 +1,8 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Infrastructure.Attributes;
-    using Microsoft.AspNetCore.Authorization;
+    using Data.Models;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data.Categories;
     using Services.Data.Posts;
@@ -15,16 +13,18 @@
     {
         private readonly IPostService postService;
         private readonly ICategoryService categoriesService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public PostController(IPostService postService, ICategoryService categoriesService)
+        public PostController(IPostService postService, ICategoryService categoriesService, UserManager<ApplicationUser> userManager)
         {
             this.postService = postService;
             this.categoriesService = categoriesService;
+            this.userManager = userManager;
         }
 
         public async Task<ViewResult> ByCategory(int id)
         {
-            var posts = await this.postService.GetAllFromCategory<PostAdminListingModel>(id);
+            var posts = this.postService.GetAllFromCategoryАsQueryable<PostAdminListingModel>(id);
 
             var model = new PostsFromCategoryViewModel
             {
@@ -34,8 +34,36 @@
             return this.View(model);
         }
 
+        public async Task<IActionResult> Create(int id)
+        {
+            if (!await this.categoriesService.DoesItExist(id))
+            {
+                return this.NotFound();
+            }
+
+            var category = await this.categoriesService.GetByIdAsync<CategoryListingViewModel>(id);
+
+            var model = new NewPostModel
+            {
+                CategoryName = category.Title,
+                CategoryId = category.Id,
+                CategoryImageUrl = category.ImageUrl,
+                AuthorName = this.User.Identity.Name,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPost(NewPostModel model)
+        {
+            model.AuthorId = this.userManager.GetUserId(this.User);
+            int postId = await this.postService.CreatePostAsync(model);
+
+            return this.RedirectToAction("ByCategory", "Post", new { id = model.CategoryId });
+        }
+
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             if (!await this.postService.DoesItExist(id))
@@ -49,7 +77,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Edit(EditPostModel model)
         {
             if (!await this.postService.DoesItExist(model.PostId))
@@ -63,7 +90,6 @@
         }
 
         [HttpPost]
-        [Auth(GlobalConstants.AdministratorRoleName)]
         public async Task<ActionResult<DeleteCategoryModel>> Delete(int id)
         {
             if (!await this.postService.DoesItExist(id))
