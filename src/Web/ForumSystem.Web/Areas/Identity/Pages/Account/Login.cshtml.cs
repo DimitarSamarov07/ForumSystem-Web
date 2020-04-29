@@ -81,6 +81,7 @@ namespace ForumSystem.Web.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var userId = this._userManager.FindByNameAsync(Input.Username).Result.Id;
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -93,7 +94,7 @@ namespace ForumSystem.Web.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout", "OnGetUser", new { name = this.User.Identity.Name });
+                    return this.RedirectToAction("Lockout", "Account",new { id = userId, area = string.Empty });
                 }
                 else
                 {

@@ -70,7 +70,7 @@
                 .ToList();
 
             var obj = votesValue
-                .Sum(x => Convert.ToInt32(x.VoteType));
+                .Sum(x => (int)x.VoteType);
             return obj;
         }
     }

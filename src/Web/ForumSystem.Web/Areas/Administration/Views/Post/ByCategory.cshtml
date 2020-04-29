@@ -27,8 +27,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
-                                <th>Author Name</th>
-                                <th>Total Votes</th>
+                                <th>CreatedOn</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -39,8 +38,7 @@
                                 <tr>
                                     <td>@Html.DisplayFor(modelItem => item.Id)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.AuthorName)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.TotalVotes)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
                                     <td>
                                         <a asp-area="Administration" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                                         <a href="" onclick="Delete('@item.Id')">Delete</a> |

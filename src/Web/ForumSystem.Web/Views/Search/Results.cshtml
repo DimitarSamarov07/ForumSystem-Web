@@ -49,16 +49,6 @@
                             }
 
 
-
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <div><a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit Post</a></div>
-                                <div><a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete post</a></div>
-                            }
-
-
-
-
                         </div>
                     </td>
                 </tr>
