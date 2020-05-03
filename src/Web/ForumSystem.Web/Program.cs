@@ -18,7 +18,7 @@
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration(
+                .ConfigureAppConfiguration(
                 (ctx, builder) =>
             {
                 var keyVaultEndpoint = GetKeyVaultEndpoint();
@@ -38,6 +38,6 @@
                         webBuilder.UseStartup<Startup>();
                     });
 
-        private static string GetKeyVaultEndpoint() => Environment.GetEnvironmentVariable("KEYVAULT_ENDPOINT");
+        private static string GetKeyVaultEndpoint() => "https://forumsystemkeyvault.vault.azure.net/";
     }
 }
